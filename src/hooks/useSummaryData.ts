@@ -2,8 +2,11 @@ import { useMemo } from "react";
 import { useLedger } from "../state/LedgerContext";
 import { isWithinRange } from "../utils/period";
 import { transactionTotal } from "../utils/format";
-import { trendBuckets } from "../utils/trend";
+import { countBuckets, forecastTrend, trendBuckets } from "../utils/trend";
 import { breakdownByCounterparty } from "../utils/breakdown";
+import { marginTrend } from "../utils/margin";
+
+const FORECAST_PERIODS = 3;
 
 // Shared by SummaryView (for on-screen rendering) and the PDF export button
 // (for its own hidden, off-screen chart instances) so both stay in sync.
@@ -54,6 +57,22 @@ export function useSummaryData() {
     [transactions, effectiveRange]
   );
 
+  const incomeCountTrend = useMemo(
+    () => countBuckets(effectiveRange, transactions, "income"),
+    [transactions, effectiveRange]
+  );
+  const expenseCountTrend = useMemo(
+    () => countBuckets(effectiveRange, transactions, "expense"),
+    [transactions, effectiveRange]
+  );
+
+  const marginTrendData = useMemo(() => marginTrend(incomeTrend, expenseTrend), [incomeTrend, expenseTrend]);
+
+  const netForecast = useMemo(
+    () => forecastTrend(effectiveRange, netTrend, FORECAST_PERIODS),
+    [effectiveRange, netTrend]
+  );
+
   return {
     effectiveRange,
     totalIncome,
@@ -66,5 +85,9 @@ export function useSummaryData() {
     cumulativeNet,
     expenseBreakdown,
     incomeBreakdown,
+    incomeCountTrend,
+    expenseCountTrend,
+    marginTrendData,
+    netForecast,
   };
 }

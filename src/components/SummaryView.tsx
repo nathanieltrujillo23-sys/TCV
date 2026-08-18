@@ -2,11 +2,14 @@ import { useState } from "react";
 import { formatCurrency } from "../utils/format";
 import { useSummaryData } from "../hooks/useSummaryData";
 import { ComparisonTrendChart } from "./ComparisonTrendChart";
-import { NetTrendChart } from "./NetTrendChart";
+import { ForecastChart } from "./ForecastChart";
+import { MarginTrendChart } from "./MarginTrendChart";
+import { TransactionCountChart } from "./TransactionCountChart";
 import { CumulativeChart } from "./CumulativeChart";
 import { BreakdownList } from "./BreakdownList";
 import { PieChart } from "./PieChart";
 import { AveragesCard } from "./AveragesCard";
+import { GrowthCard } from "./GrowthCard";
 import { VendorDetailModal } from "./VendorDetailModal";
 import type { TransactionType } from "../types";
 
@@ -41,6 +44,10 @@ export function SummaryView() {
     cumulativeNet,
     expenseBreakdown,
     incomeBreakdown,
+    incomeCountTrend,
+    expenseCountTrend,
+    marginTrendData,
+    netForecast,
   } = useSummaryData();
 
   const [selected, setSelected] = useState<{ type: TransactionType; label: string } | null>(null);
@@ -60,6 +67,8 @@ export function SummaryView() {
 
       <AveragesCard />
 
+      <GrowthCard />
+
       <div id="summary-chart-comparison" className="rounded-2xl bg-slate-800 p-4">
         <div className="flex items-center gap-4 mb-2">
           <h2 className="text-slate-200 font-semibold text-sm mr-auto">Income vs expenses</h2>
@@ -74,13 +83,38 @@ export function SummaryView() {
       </div>
 
       <div id="summary-chart-net" className="rounded-2xl bg-slate-800 p-4">
-        <h2 className="text-slate-200 font-semibold text-sm mb-2">Net per period</h2>
-        <NetTrendChart points={netTrend} />
+        <div className="flex items-center gap-4 mb-2">
+          <h2 className="text-slate-200 font-semibold text-sm mr-auto">Net per period</h2>
+          {netForecast.length > 0 && (
+            <span className="flex items-center gap-1 text-slate-400 text-xs">
+              <span className="w-2.5 h-2.5 rounded-sm border border-dashed border-slate-400" /> Forecast
+            </span>
+          )}
+        </div>
+        <ForecastChart actual={netTrend} forecast={netForecast} />
+      </div>
+
+      <div id="summary-chart-margin" className="rounded-2xl bg-slate-800 p-4">
+        <h2 className="text-slate-200 font-semibold text-sm mb-2">Net margin trend</h2>
+        <MarginTrendChart points={marginTrendData} />
       </div>
 
       <div id="summary-chart-cumulative" className="rounded-2xl bg-slate-800 p-4">
         <h2 className="text-slate-200 font-semibold text-sm mb-2">Cumulative net</h2>
         <CumulativeChart points={cumulativeNet} />
+      </div>
+
+      <div id="summary-chart-count" className="rounded-2xl bg-slate-800 p-4">
+        <div className="flex items-center gap-4 mb-2">
+          <h2 className="text-slate-200 font-semibold text-sm mr-auto">Transaction count</h2>
+          <span className="flex items-center gap-1 text-slate-400 text-xs">
+            <span className="w-2 h-2 rounded-full bg-emerald-400" /> Income
+          </span>
+          <span className="flex items-center gap-1 text-slate-400 text-xs">
+            <span className="w-2 h-2 rounded-full bg-rose-400" /> Expenses
+          </span>
+        </div>
+        <TransactionCountChart income={incomeCountTrend} expense={expenseCountTrend} />
       </div>
 
       <div id="summary-chart-pie" className="rounded-2xl bg-slate-800 p-4">

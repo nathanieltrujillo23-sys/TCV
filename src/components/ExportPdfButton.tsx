@@ -3,7 +3,9 @@ import { useLedger } from "../state/LedgerContext";
 import { useSummaryData } from "../hooks/useSummaryData";
 import { exportSummaryPdf } from "../utils/pdfExport";
 import { ComparisonTrendChart } from "./ComparisonTrendChart";
-import { NetTrendChart } from "./NetTrendChart";
+import { ForecastChart } from "./ForecastChart";
+import { MarginTrendChart } from "./MarginTrendChart";
+import { TransactionCountChart } from "./TransactionCountChart";
 import { CumulativeChart } from "./CumulativeChart";
 import { PieChart } from "./PieChart";
 
@@ -20,12 +22,18 @@ export function ExportPdfButton() {
     netTrend,
     cumulativeNet,
     expenseBreakdown,
+    incomeCountTrend,
+    expenseCountTrend,
+    marginTrendData,
+    netForecast,
   } = useSummaryData();
 
   const [exporting, setExporting] = useState(false);
   const comparisonRef = useRef<HTMLDivElement>(null);
   const netRef = useRef<HTMLDivElement>(null);
+  const marginRef = useRef<HTMLDivElement>(null);
   const cumulativeRef = useRef<HTMLDivElement>(null);
+  const countRef = useRef<HTMLDivElement>(null);
   const pieRef = useRef<HTMLDivElement>(null);
 
   async function handleExport() {
@@ -40,8 +48,10 @@ export function ExportPdfButton() {
       const svgOf = (container: HTMLDivElement | null) => container?.querySelector("svg") ?? null;
       const charts = [
         svgOf(comparisonRef.current) && { title: "Income vs expenses", svg: svgOf(comparisonRef.current)! },
-        svgOf(netRef.current) && { title: "Net per period", svg: svgOf(netRef.current)! },
+        svgOf(netRef.current) && { title: "Net per period (with forecast)", svg: svgOf(netRef.current)! },
+        svgOf(marginRef.current) && { title: "Net margin trend", svg: svgOf(marginRef.current)! },
         svgOf(cumulativeRef.current) && { title: "Cumulative net", svg: svgOf(cumulativeRef.current)! },
+        svgOf(countRef.current) && { title: "Transaction count per period", svg: svgOf(countRef.current)! },
         svgOf(pieRef.current) && { title: "Where expenses went", svg: svgOf(pieRef.current)! },
       ].filter((c): c is NonNullable<typeof c> => c !== null);
 
@@ -84,10 +94,16 @@ export function ExportPdfButton() {
           <ComparisonTrendChart income={incomeTrend} expense={expenseTrend} />
         </div>
         <div ref={netRef} className="bg-slate-800 p-4">
-          <NetTrendChart points={netTrend} />
+          <ForecastChart actual={netTrend} forecast={netForecast} />
+        </div>
+        <div ref={marginRef} className="bg-slate-800 p-4">
+          <MarginTrendChart points={marginTrendData} />
         </div>
         <div ref={cumulativeRef} className="bg-slate-800 p-4">
           <CumulativeChart points={cumulativeNet} />
+        </div>
+        <div ref={countRef} className="bg-slate-800 p-4">
+          <TransactionCountChart income={incomeCountTrend} expense={expenseCountTrend} />
         </div>
         <div ref={pieRef} className="bg-slate-800 p-4">
           <PieChart items={expenseBreakdown} />
