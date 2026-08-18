@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useLedger } from "../state/LedgerContext";
+import { useAuth } from "../state/AuthContext";
 import { Segmented } from "./Segmented";
 import { ImportPanel } from "./ImportPanel";
 import { ManageListsPanel } from "./ManageListsPanel";
@@ -146,12 +147,13 @@ function PeriodControls() {
 
 export function TopBar() {
   const { effectiveLabel } = useLedger();
+  const { businessName } = useAuth();
 
   return (
     <header className="sticky top-0 z-10 bg-slate-900 border-b border-slate-800">
       <div className="max-w-3xl mx-auto px-4 py-3 flex flex-col items-center gap-3 text-center">
         <div>
-          <h1 className="text-white font-semibold text-lg leading-tight">TRUCAPITALVENTURES</h1>
+          <h1 className="text-white font-semibold text-lg leading-tight">{businessName || "TRUCAPITALVENTURES"}</h1>
           <p className="text-slate-400 text-xs">{effectiveLabel}</p>
         </div>
         <div className="flex items-center justify-center gap-2 flex-wrap">

@@ -6,6 +6,7 @@ export function SignInPage() {
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [businessName, setBusinessName] = useState("");
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
   const [busy, setBusy] = useState(false);
@@ -28,7 +29,7 @@ export function SignInPage() {
       setBusy(false);
       if (error) setError(error);
     } else {
-      const { error, needsConfirmation } = await signUp(email.trim(), password);
+      const { error, needsConfirmation } = await signUp(email.trim(), password, businessName);
       setBusy(false);
       if (error) {
         setError(error);
@@ -90,6 +91,15 @@ export function SignInPage() {
               minLength={6}
               className="rounded-lg bg-slate-900 border border-slate-700 px-3 py-2 text-white text-sm focus:outline-none focus:border-slate-500"
             />
+            {mode === "signup" && (
+              <input
+                type="text"
+                value={businessName}
+                onChange={(e) => setBusinessName(e.target.value)}
+                placeholder="Business name (optional)"
+                className="rounded-lg bg-slate-900 border border-slate-700 px-3 py-2 text-white text-sm focus:outline-none focus:border-slate-500"
+              />
+            )}
             <button
               type="submit"
               disabled={busy}

@@ -4,10 +4,16 @@ import { supabase } from "../lib/supabaseClient";
 
 interface AuthContextValue {
   user: User | null;
+  businessName: string | null;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<{ error: string | null }>;
-  signUp: (email: string, password: string) => Promise<{ error: string | null; needsConfirmation: boolean }>;
+  signUp: (
+    email: string,
+    password: string,
+    businessName?: string
+  ) => Promise<{ error: string | null; needsConfirmation: boolean }>;
   signOut: () => Promise<void>;
+  updateBusinessName: (name: string) => Promise<{ error: string | null }>;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -36,8 +42,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return { error: error?.message ?? null };
   };
 
-  const signUp: AuthContextValue["signUp"] = async (email, password) => {
-    const { data, error } = await supabase.auth.signUp({ email, password });
+  const signUp: AuthContextValue["signUp"] = async (email, password, businessName) => {
+    const trimmedName = businessName?.trim();
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: trimmedName ? { data: { business_name: trimmedName } } : undefined,
+    });
     if (error) return { error: error.message, needsConfirmation: false };
     // If email confirmation is required, Supabase returns a user but no
     // session — the caller should tell the person to check their inbox.
@@ -48,10 +59,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await supabase.auth.signOut();
   };
 
+  const updateBusinessName: AuthContextValue["updateBusinessName"] = async (name) => {
+    const { error } = await supabase.auth.updateUser({ data: { business_name: name.trim() } });
+    return { error: error?.message ?? null };
+  };
+
+  const businessName = (user?.user_metadata?.business_name as string | undefined)?.trim() || null;
+
   const value = useMemo<AuthContextValue>(
-    () => ({ user, loading, signIn, signUp, signOut }),
+    () => ({ user, businessName, loading, signIn, signUp, signOut, updateBusinessName }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [user, loading]
+    [user, businessName, loading]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
