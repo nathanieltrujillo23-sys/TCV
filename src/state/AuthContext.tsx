@@ -5,10 +5,8 @@ import { supabase } from "../lib/supabaseClient";
 interface AuthContextValue {
   user: User | null;
   loading: boolean;
-  // Sends a 6-digit sign-in code to the given email.
-  sendCode: (email: string) => Promise<{ error: string | null }>;
-  // Verifies the code and completes sign-in.
-  verifyCode: (email: string, code: string) => Promise<{ error: string | null }>;
+  signIn: (email: string, password: string) => Promise<{ error: string | null }>;
+  signUp: (email: string, password: string) => Promise<{ error: string | null; needsConfirmation: boolean }>;
   signOut: () => Promise<void>;
 }
 
@@ -33,17 +31,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => subscription.unsubscribe();
   }, []);
 
-  const sendCode: AuthContextValue["sendCode"] = async (email) => {
-    const { error } = await supabase.auth.signInWithOtp({
-      email,
-      options: { shouldCreateUser: true },
-    });
+  const signIn: AuthContextValue["signIn"] = async (email, password) => {
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
     return { error: error?.message ?? null };
   };
 
-  const verifyCode: AuthContextValue["verifyCode"] = async (email, code) => {
-    const { error } = await supabase.auth.verifyOtp({ email, token: code, type: "email" });
-    return { error: error?.message ?? null };
+  const signUp: AuthContextValue["signUp"] = async (email, password) => {
+    const { data, error } = await supabase.auth.signUp({ email, password });
+    if (error) return { error: error.message, needsConfirmation: false };
+    // If email confirmation is required, Supabase returns a user but no
+    // session — the caller should tell the person to check their inbox.
+    return { error: null, needsConfirmation: !data.session };
   };
 
   const signOut = async () => {
@@ -51,7 +49,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const value = useMemo<AuthContextValue>(
-    () => ({ user, loading, sendCode, verifyCode, signOut }),
+    () => ({ user, loading, signIn, signUp, signOut }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [user, loading]
   );

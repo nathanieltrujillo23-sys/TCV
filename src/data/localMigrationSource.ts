@@ -27,6 +27,43 @@ export interface LocalMigrationCandidate {
   transactionCount: number;
 }
 
+// The old local system generated ids like "msxv2agt-yexbly" — fine for
+// localStorage, but invalid for Postgres `uuid` columns. Every row gets a
+// fresh UUID here, with cross-references (transaction -> preset, audit
+// entry -> transaction) rewritten to match. Nested before/after snapshots
+// on audit entries are jsonb, not real columns, so their old-format ids are
+// left as-is — they're just historical record, not real references.
+function remapToFreshIds(snapshot: LedgerSnapshot): LedgerSnapshot {
+  const presetIdMap = new Map<string, string>();
+  const txIdMap = new Map<string, string>();
+
+  const presets = snapshot.presets.map((p) => {
+    const newId = crypto.randomUUID();
+    presetIdMap.set(p.id, newId);
+    return { ...p, id: newId };
+  });
+
+  const transactions = snapshot.transactions.map((t) => {
+    const newId = crypto.randomUUID();
+    txIdMap.set(t.id, newId);
+    return {
+      ...t,
+      id: newId,
+      presetId: t.presetId ? presetIdMap.get(t.presetId) : undefined,
+    };
+  });
+
+  const managedLists = snapshot.managedLists.map((m) => ({ ...m, id: crypto.randomUUID() }));
+
+  const auditLog = snapshot.auditLog.map((a) => ({
+    ...a,
+    id: crypto.randomUUID(),
+    transactionId: txIdMap.get(a.transactionId) ?? crypto.randomUUID(),
+  }));
+
+  return { transactions, presets, managedLists, auditLog };
+}
+
 export function findLocalMigrationCandidates(): LocalMigrationCandidate[] {
   const accounts = readJSON<LocalAccount[]>("tcv-ledger:accounts", []);
   const candidates: LocalMigrationCandidate[] = [];
@@ -43,7 +80,7 @@ export function findLocalMigrationCandidates(): LocalMigrationCandidate[] {
     candidates.push({
       accountId: account.id,
       accountName: account.name,
-      snapshot: { transactions, presets, managedLists, auditLog },
+      snapshot: remapToFreshIds({ transactions, presets, managedLists, auditLog }),
       transactionCount: transactions.length,
     });
   }
