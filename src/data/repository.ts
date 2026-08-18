@@ -24,4 +24,11 @@ export interface LedgerRepository {
   deleteManagedItem(id: string): Promise<void>;
 
   insertAuditEntry(a: AuditEntry): Promise<void>;
+
+  // Uploads a receipt/invoice file for a transaction and returns its storage
+  // path (not a URL — the bucket is private, so viewing requires a signed
+  // URL fetched separately via getReceiptUrl).
+  uploadReceipt(transactionId: string, file: File): Promise<string>;
+  deleteReceipt(path: string): Promise<void>;
+  getReceiptUrl(path: string): Promise<string>;
 }

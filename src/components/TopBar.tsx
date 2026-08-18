@@ -7,6 +7,7 @@ import { AuditLogPanel } from "./AuditLogPanel";
 import { AccountMenu } from "./AccountMenu";
 import { DateRangePicker } from "./DateRangePicker";
 import { ExportPdfButton } from "./ExportPdfButton";
+import { SearchPanel } from "./SearchPanel";
 import { rangeLabel } from "../utils/period";
 import type { Period } from "../types";
 
@@ -46,6 +47,13 @@ function ViewModeToggle() {
         className={tab(viewMode === "entry" && primaryView === "expense")}
       >
         Expense
+      </button>
+      <button
+        type="button"
+        onClick={() => setViewMode("taxes")}
+        className={tab(viewMode === "taxes")}
+      >
+        Taxes
       </button>
       <button
         type="button"
@@ -141,18 +149,17 @@ export function TopBar() {
 
   return (
     <header className="sticky top-0 z-10 bg-slate-900 border-b border-slate-800">
-      <div className="max-w-3xl mx-auto px-4 py-3 flex flex-col gap-3">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h1 className="text-white font-semibold text-lg leading-tight">TRUCAPITALVENTURES</h1>
-            <p className="text-slate-400 text-xs">{effectiveLabel}</p>
-          </div>
-          <div className="flex items-center gap-2 flex-wrap">
-            <PeriodControls />
-            <ViewModeToggle />
-          </div>
+      <div className="max-w-3xl mx-auto px-4 py-3 flex flex-col items-center gap-3 text-center">
+        <div>
+          <h1 className="text-white font-semibold text-lg leading-tight">TRUCAPITALVENTURES</h1>
+          <p className="text-slate-400 text-xs">{effectiveLabel}</p>
         </div>
-        <div className="flex items-center gap-2 flex-wrap">
+        <div className="flex items-center justify-center gap-2 flex-wrap">
+          <PeriodControls />
+          <ViewModeToggle />
+        </div>
+        <div className="flex items-center justify-center gap-2 flex-wrap">
+          <SearchPanel />
           <ImportPanel />
           <ManageListsPanel />
           <AuditLogPanel />

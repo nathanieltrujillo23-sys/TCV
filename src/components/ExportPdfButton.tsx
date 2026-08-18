@@ -22,6 +22,7 @@ export function ExportPdfButton() {
     netTrend,
     cumulativeNet,
     expenseBreakdown,
+    categoryBreakdown,
     incomeCountTrend,
     expenseCountTrend,
     marginTrendData,
@@ -35,6 +36,7 @@ export function ExportPdfButton() {
   const cumulativeRef = useRef<HTMLDivElement>(null);
   const countRef = useRef<HTMLDivElement>(null);
   const pieRef = useRef<HTMLDivElement>(null);
+  const categoryRef = useRef<HTMLDivElement>(null);
 
   async function handleExport() {
     if (exporting) return;
@@ -53,6 +55,7 @@ export function ExportPdfButton() {
         svgOf(cumulativeRef.current) && { title: "Cumulative net", svg: svgOf(cumulativeRef.current)! },
         svgOf(countRef.current) && { title: "Transaction count per period", svg: svgOf(countRef.current)! },
         svgOf(pieRef.current) && { title: "Where expenses went", svg: svgOf(pieRef.current)! },
+        svgOf(categoryRef.current) && { title: "Expenses by category", svg: svgOf(categoryRef.current)! },
       ].filter((c): c is NonNullable<typeof c> => c !== null);
 
       await exportSummaryPdf({
@@ -61,6 +64,7 @@ export function ExportPdfButton() {
         totals: { income: totalIncome, expense: totalExpense, net, netMargin },
         charts,
         expenseBreakdown,
+        categoryBreakdown,
       });
     } catch (err) {
       console.error("Failed to export PDF:", err);
@@ -107,6 +111,9 @@ export function ExportPdfButton() {
         </div>
         <div ref={pieRef} className="bg-slate-800 p-4">
           <PieChart items={expenseBreakdown} />
+        </div>
+        <div ref={categoryRef} className="bg-slate-800 p-4">
+          <PieChart items={categoryBreakdown} />
         </div>
       </div>
     </>

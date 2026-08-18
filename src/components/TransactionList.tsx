@@ -53,7 +53,7 @@ export function TransactionList({ type }: { type: "income" | "expense" }) {
   );
 }
 
-function TransactionRow({
+export function TransactionRow({
   transaction,
   onEdit,
   onDelete,
@@ -62,6 +62,7 @@ function TransactionRow({
   onEdit: () => void;
   onDelete: () => void;
 }) {
+  const { getReceiptUrl } = useLedger();
   const t = transaction;
   const title = t.type === "expense" ? t.item : t.vendor;
   const purchases = t.purchases ?? 1;
@@ -69,12 +70,24 @@ function TransactionRow({
     t.type === "expense"
       ? [
           t.vendor,
+          t.category,
           t.accountMethod,
           purchases > 1 ? `${purchases} purchases · ${formatCurrency(t.amount)} ea` : null,
+          t.recurring ? `🔁 ${t.recurringFrequency ?? "recurring"}` : null,
         ]
           .filter(Boolean)
           .join(" · ")
       : `${t.accounts ?? 1} account${(t.accounts ?? 1) === 1 ? "" : "s"} · ${formatCurrency(t.amount)} ea`;
+
+  async function handleViewReceipt() {
+    if (!t.receiptPath) return;
+    try {
+      const url = await getReceiptUrl(t.receiptPath);
+      window.open(url, "_blank", "noopener,noreferrer");
+    } catch (err) {
+      console.error("Failed to open receipt:", err);
+    }
+  }
 
   return (
     <li className="flex items-center justify-between py-2 gap-2">
@@ -89,6 +102,17 @@ function TransactionRow({
         <span className={`text-sm font-semibold ${t.type === "income" ? "text-emerald-400" : "text-rose-400"}`}>
           {formatCurrency(transactionTotal(t))}
         </span>
+        {t.receiptPath && (
+          <button
+            type="button"
+            onClick={handleViewReceipt}
+            aria-label="View receipt"
+            title="View receipt"
+            className="text-slate-500 hover:text-slate-200 text-xs"
+          >
+            📎
+          </button>
+        )}
         <button type="button" onClick={onEdit} className="text-slate-500 hover:text-slate-200 text-xs">
           Edit
         </button>

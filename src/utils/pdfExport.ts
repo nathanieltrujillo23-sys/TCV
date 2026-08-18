@@ -22,12 +22,14 @@ export async function exportSummaryPdf({
   totals,
   charts,
   expenseBreakdown,
+  categoryBreakdown,
 }: {
   transactions: Transaction[];
   range: DateRange;
   totals: { income: number; expense: number; net: number; netMargin: number | null };
   charts: ChartCapture[];
   expenseBreakdown: BreakdownItem[];
+  categoryBreakdown: BreakdownItem[];
 }): Promise<void> {
   const doc = new jsPDF({ unit: "pt", format: "letter" });
   const pageWidth = doc.internal.pageSize.getWidth();
@@ -78,6 +80,9 @@ export async function exportSummaryPdf({
     if (title === "Where expenses went" && expenseBreakdown.length > 0) {
       y = addPieLegend(doc, expenseBreakdown, MARGIN, y);
     }
+    if (title === "Expenses by category" && categoryBreakdown.length > 0) {
+      y = addPieLegend(doc, categoryBreakdown, MARGIN, y);
+    }
     y += 16;
   }
 
@@ -99,11 +104,12 @@ export async function exportSummaryPdf({
   autoTable(doc, {
     startY: MARGIN + 14,
     margin: { left: MARGIN, right: MARGIN },
-    head: [["Date", "Type", "Item / Vendor", "Qty", "Unit price", "Total"]],
+    head: [["Date", "Type", "Item / Vendor", "Category", "Qty", "Unit price", "Total"]],
     body: sorted.map((t) => [
       new Date(t.date).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" }),
       t.type === "income" ? "Income" : "Expense",
       t.type === "expense" ? t.item || "—" : t.vendor || "—",
+      t.type === "expense" ? t.category || "—" : "—",
       String(t.type === "expense" ? (t.purchases ?? 1) : (t.accounts ?? 1)),
       formatCurrency(t.amount),
       formatCurrency(transactionTotal(t)),
@@ -111,7 +117,7 @@ export async function exportSummaryPdf({
     styles: { fontSize: 8 },
     headStyles: { fillColor: [30, 41, 59] },
     didParseCell: (data) => {
-      if (data.section === "body" && data.column.index === 5) {
+      if (data.section === "body" && data.column.index === 6) {
         const rowType = sorted[data.row.index]?.type;
         data.cell.styles.textColor = rowType === "income" ? [16, 150, 90] : [220, 38, 38];
       }

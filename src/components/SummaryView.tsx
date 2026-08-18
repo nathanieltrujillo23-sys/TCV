@@ -44,6 +44,7 @@ export function SummaryView() {
     cumulativeNet,
     expenseBreakdown,
     incomeBreakdown,
+    categoryBreakdown,
     incomeCountTrend,
     expenseCountTrend,
     marginTrendData,
@@ -120,6 +121,11 @@ export function SummaryView() {
       <div id="summary-chart-pie" className="rounded-2xl bg-slate-800 p-4">
         <h2 className="text-slate-200 font-semibold text-sm mb-3">Where expenses went</h2>
         <PieChart items={expenseBreakdown} />
+      </div>
+
+      <div id="summary-chart-category" className="rounded-2xl bg-slate-800 p-4">
+        <h2 className="text-slate-200 font-semibold text-sm mb-3">Expenses by category</h2>
+        <PieChart items={categoryBreakdown} />
       </div>
 
       <div className="grid sm:grid-cols-2 gap-4">

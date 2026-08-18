@@ -9,6 +9,7 @@ import { IncomeForm } from "./components/IncomeForm";
 import { PresetsPanel } from "./components/PresetsPanel";
 import { TransactionList } from "./components/TransactionList";
 import { SummaryView } from "./components/SummaryView";
+import { TaxesView } from "./components/TaxesView";
 import { SignInPage } from "./components/SignInPage";
 import { MigrationPrompt } from "./components/MigrationPrompt";
 
@@ -32,6 +33,8 @@ function AppContent() {
       <MigrationPrompt />
       {viewMode === "summary" ? (
         <SummaryView />
+      ) : viewMode === "taxes" ? (
+        <TaxesView />
       ) : (
         <>
           <Dashboard />

@@ -10,6 +10,10 @@ export interface Transaction {
   item?: string; // expense only
   vendor?: string; // expense: "where bought"; income: "firm"
   accountMethod?: string; // expense only: card/bank used
+  category?: string; // expense only: tax/reporting category
+  receiptPath?: string; // storage path in the "receipts" bucket, either type
+  recurring?: boolean; // expense only
+  recurringFrequency?: "weekly" | "monthly"; // expense only, when recurring is true
   presetId?: string;
 }
 
@@ -31,9 +35,9 @@ export interface Preset {
 
 export type Period = "week" | "month" | "quarter" | "year";
 
-export type ViewMode = "entry" | "summary";
+export type ViewMode = "entry" | "summary" | "taxes";
 
-export type ManagedListCategory = "vendor" | "accountMethod" | "firm" | "item";
+export type ManagedListCategory = "vendor" | "accountMethod" | "firm" | "item" | "category";
 
 export interface ManagedListItem {
   id: string;

@@ -9,6 +9,7 @@ const CATEGORY_OPTIONS: { value: ManagedListCategory; label: string }[] = [
   { value: "vendor", label: "Vendors" },
   { value: "accountMethod", label: "Cards / Banks" },
   { value: "firm", label: "Firms" },
+  { value: "category", label: "Categories" },
 ];
 
 export function ManageListsPanel() {

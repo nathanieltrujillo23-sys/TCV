@@ -3,7 +3,7 @@ import { useLedger } from "../state/LedgerContext";
 import { isWithinRange } from "../utils/period";
 import { transactionTotal } from "../utils/format";
 import { countBuckets, forecastTrend, trendBuckets } from "../utils/trend";
-import { breakdownByCounterparty } from "../utils/breakdown";
+import { breakdownByCategory, breakdownByCounterparty } from "../utils/breakdown";
 import { marginTrend } from "../utils/margin";
 
 const FORECAST_PERIODS = 3;
@@ -56,6 +56,10 @@ export function useSummaryData() {
     () => breakdownByCounterparty(transactions, "income", effectiveRange, 5),
     [transactions, effectiveRange]
   );
+  const categoryBreakdown = useMemo(
+    () => breakdownByCategory(transactions, effectiveRange, 5),
+    [transactions, effectiveRange]
+  );
 
   const incomeCountTrend = useMemo(
     () => countBuckets(effectiveRange, transactions, "income"),
@@ -85,6 +89,7 @@ export function useSummaryData() {
     cumulativeNet,
     expenseBreakdown,
     incomeBreakdown,
+    categoryBreakdown,
     incomeCountTrend,
     expenseCountTrend,
     marginTrendData,

@@ -5,11 +5,12 @@ import { dateInputToISO, todayInputValue } from "../utils/date";
 import { DateInput } from "./DateInput";
 
 export function IncomeForm() {
-  const { addTransaction, addPreset, listNames } = useLedger();
+  const { addTransaction, addPreset, attachReceipt, listNames } = useLedger();
   const [amount, setAmount] = useState("");
   const [firm, setFirm] = useState("");
   const [accounts, setAccounts] = useState("1");
   const [date, setDate] = useState(todayInputValue());
+  const [receiptFile, setReceiptFile] = useState<File | null>(null);
   const [justLogged, setJustLogged] = useState<{ amount: number; firm: string; accounts: number } | null>(null);
 
   const firms = listNames("firm");
@@ -19,6 +20,7 @@ export function IncomeForm() {
     setFirm("");
     setAccounts("1");
     setDate(todayInputValue());
+    setReceiptFile(null);
   }
 
   function handleSubmit(e: FormEvent) {
@@ -27,13 +29,17 @@ export function IncomeForm() {
     const acc = parseInt(accounts, 10) || 1;
     if (!Number.isFinite(amt) || !firm.trim()) return;
 
-    addTransaction({
+    const tx = addTransaction({
       type: "income",
       date: dateInputToISO(date),
       amount: amt,
       accounts: acc,
       vendor: firm.trim(),
     });
+
+    if (receiptFile) {
+      attachReceipt(tx.id, receiptFile).catch((err) => console.error("Failed to attach receipt:", err));
+    }
 
     setJustLogged({ amount: amt, firm: firm.trim(), accounts: acc });
     reset();
@@ -101,6 +107,16 @@ export function IncomeForm() {
           />
         </label>
         <DateInput value={date} onChange={setDate} />
+        <label className="flex flex-col gap-1 text-xs text-slate-400 col-span-2">
+          Receipt / invoice (optional)
+          <input
+            type="file"
+            accept="image/*,application/pdf"
+            onChange={(e) => setReceiptFile(e.target.files?.[0] ?? null)}
+            className="rounded-lg bg-slate-900 border border-slate-700 px-3 py-2 text-slate-300 text-sm file:mr-3 file:rounded-md file:border-0 file:bg-slate-700 file:text-slate-200 file:px-3 file:py-1.5 file:text-xs file:font-medium"
+          />
+          {receiptFile && <span className="text-slate-500 truncate">{receiptFile.name}</span>}
+        </label>
       </div>
 
       <div className="text-xs text-slate-400">

@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import { flushSync } from "react-dom";
 import type {
   AuditEntry,
   ManagedListCategory,
@@ -50,6 +51,12 @@ interface LedgerContextValue {
   addTransaction: (t: Omit<Transaction, "id" | "date"> & { date?: string }) => Transaction;
   updateTransaction: (id: string, patch: Partial<Transaction>) => void;
   deleteTransaction: (id: string) => void;
+
+  // Uploads a receipt/invoice for a transaction and links it (or replaces the
+  // existing one — the old file, if any, is deleted first).
+  attachReceipt: (transactionId: string, file: File) => Promise<void>;
+  removeReceipt: (transactionId: string) => Promise<void>;
+  getReceiptUrl: (path: string) => Promise<string>;
 
   addPreset: (p: Omit<Preset, "id">) => Preset;
   deletePreset: (id: string) => void;
@@ -150,11 +157,18 @@ export function LedgerProvider({
     repository.insertManagedItem(item).catch((err) => console.error("Failed to persist managed item:", err));
   }
 
-  function registerFieldsFrom(t: { type: TransactionType; vendor?: string; accountMethod?: string; item?: string }) {
+  function registerFieldsFrom(t: {
+    type: TransactionType;
+    vendor?: string;
+    accountMethod?: string;
+    item?: string;
+    category?: string;
+  }) {
     if (t.type === "expense") {
       ensureManagedItem("vendor", t.vendor);
       ensureManagedItem("accountMethod", t.accountMethod);
       ensureManagedItem("item", t.item);
+      ensureManagedItem("category", t.category);
     } else {
       ensureManagedItem("firm", t.vendor);
     }
@@ -170,10 +184,27 @@ export function LedgerProvider({
   };
 
   const updateTransaction: LedgerContextValue["updateTransaction"] = (id, patch) => {
-    const before = transactions.find((t) => t.id === id);
-    if (!before) return;
-    const after: Transaction = { ...before, ...patch };
-    setTransactions((prev) => prev.map((t) => (t.id === id ? after : t)));
+    // Reads/writes prev inside the updater (rather than the outer `transactions`
+    // closure) so this can't race a transaction that was just created in the
+    // same tick — e.g. attaching a receipt immediately after addTransaction.
+    // React only runs a setState updater synchronously when the call happens
+    // inside a React-managed event handler; attachReceipt calls this after an
+    // `await`, well outside that window, so the updater must be forced to run
+    // synchronously with flushSync — otherwise before/after below would still
+    // be unset by the time this function returns.
+    let before: Transaction | undefined;
+    let after: Transaction | undefined;
+    flushSync(() => {
+      setTransactions((prev) =>
+        prev.map((t) => {
+          if (t.id !== id) return t;
+          before = t;
+          after = { ...t, ...patch };
+          return after;
+        })
+      );
+    });
+    if (!before || !after) return;
     registerFieldsFrom(after);
     logAudit("update", id, before, after);
     repository.updateTransaction(after).catch((err) => console.error("Failed to persist transaction update:", err));
@@ -185,6 +216,33 @@ export function LedgerProvider({
     if (before) logAudit("delete", id, before, undefined);
     repository.deleteTransaction(id).catch((err) => console.error("Failed to persist transaction delete:", err));
   };
+
+  const attachReceipt: LedgerContextValue["attachReceipt"] = async (transactionId, file) => {
+    const existing = transactions.find((t) => t.id === transactionId);
+    if (existing?.receiptPath) {
+      await repository.deleteReceipt(existing.receiptPath).catch((err) => console.error("Failed to remove previous receipt:", err));
+    }
+    // One retry on a transient network failure — this can fire immediately
+    // after creating the transaction it attaches to, a heavier request than
+    // the rest of the app's small JSON writes.
+    let path: string;
+    try {
+      path = await repository.uploadReceipt(transactionId, file);
+    } catch (err) {
+      console.error("Receipt upload failed, retrying once:", err);
+      path = await repository.uploadReceipt(transactionId, file);
+    }
+    updateTransaction(transactionId, { receiptPath: path });
+  };
+
+  const removeReceipt: LedgerContextValue["removeReceipt"] = async (transactionId) => {
+    const existing = transactions.find((t) => t.id === transactionId);
+    if (!existing?.receiptPath) return;
+    await repository.deleteReceipt(existing.receiptPath);
+    updateTransaction(transactionId, { receiptPath: undefined });
+  };
+
+  const getReceiptUrl: LedgerContextValue["getReceiptUrl"] = (path) => repository.getReceiptUrl(path);
 
   const addPreset: LedgerContextValue["addPreset"] = (p) => {
     const preset: Preset = { id: uid(), ...p };
@@ -323,6 +381,9 @@ export function LedgerProvider({
       addTransaction,
       updateTransaction,
       deleteTransaction,
+      attachReceipt,
+      removeReceipt,
+      getReceiptUrl,
       addPreset,
       deletePreset,
       logPreset,

@@ -3,15 +3,20 @@ import { useLedger } from "../state/LedgerContext";
 import { formatCurrency } from "../utils/format";
 import { dateInputToISO, todayInputValue } from "../utils/date";
 import { DateInput } from "./DateInput";
+import type { Transaction } from "../types";
 
 export function ExpenseForm() {
-  const { addTransaction, addPreset, listNames } = useLedger();
+  const { addTransaction, addPreset, attachReceipt, listNames } = useLedger();
   const [price, setPrice] = useState("");
   const [item, setItem] = useState("");
   const [vendor, setVendor] = useState("");
   const [accountMethod, setAccountMethod] = useState("");
+  const [category, setCategory] = useState("");
   const [purchases, setPurchases] = useState("1");
   const [date, setDate] = useState(todayInputValue());
+  const [recurring, setRecurring] = useState(false);
+  const [recurringFrequency, setRecurringFrequency] = useState<Transaction["recurringFrequency"]>("monthly");
+  const [receiptFile, setReceiptFile] = useState<File | null>(null);
   const [justLogged, setJustLogged] = useState<{
     price: number;
     item: string;
@@ -23,14 +28,19 @@ export function ExpenseForm() {
   const items = listNames("item");
   const vendors = listNames("vendor");
   const cards = listNames("accountMethod");
+  const categories = listNames("category");
 
   function reset() {
     setPrice("");
     setItem("");
     setVendor("");
     setAccountMethod("");
+    setCategory("");
     setPurchases("1");
     setDate(todayInputValue());
+    setRecurring(false);
+    setRecurringFrequency("monthly");
+    setReceiptFile(null);
   }
 
   function handleSubmit(e: FormEvent) {
@@ -39,7 +49,7 @@ export function ExpenseForm() {
     const count = parseInt(purchases, 10) || 1;
     if (!Number.isFinite(amount) || !item.trim()) return;
 
-    addTransaction({
+    const tx = addTransaction({
       type: "expense",
       date: dateInputToISO(date),
       amount,
@@ -47,7 +57,14 @@ export function ExpenseForm() {
       item: item.trim(),
       vendor: vendor.trim() || undefined,
       accountMethod: accountMethod.trim() || undefined,
+      category: category.trim() || undefined,
+      recurring,
+      recurringFrequency: recurring ? recurringFrequency : undefined,
     });
+
+    if (receiptFile) {
+      attachReceipt(tx.id, receiptFile).catch((err) => console.error("Failed to attach receipt:", err));
+    }
 
     setJustLogged({
       price: amount,
@@ -154,7 +171,81 @@ export function ExpenseForm() {
             ))}
           </datalist>
         </label>
+        <label className="flex flex-col gap-1 text-xs text-slate-400">
+          Category (for taxes)
+          <input
+            type="text"
+            list="category-list"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            placeholder="e.g. Office Supplies"
+            className="rounded-lg bg-slate-900 border border-slate-700 px-3 py-2 text-white text-base focus:outline-none focus:border-slate-500"
+          />
+          <datalist id="category-list">
+            {categories.map((c) => (
+              <option key={c} value={c} />
+            ))}
+          </datalist>
+        </label>
         <DateInput value={date} onChange={setDate} />
+        <div className="flex flex-col gap-1 text-xs text-slate-400">
+          Recurring expense?
+          <div className="inline-flex rounded-lg bg-slate-900 border border-slate-700 p-1 gap-1 w-fit">
+            <button
+              type="button"
+              onClick={() => setRecurring(true)}
+              className={`px-3 py-1 text-sm font-medium rounded-md transition-colors ${
+                recurring ? "bg-slate-100 text-slate-900" : "text-slate-400 hover:text-white"
+              }`}
+            >
+              Yes
+            </button>
+            <button
+              type="button"
+              onClick={() => setRecurring(false)}
+              className={`px-3 py-1 text-sm font-medium rounded-md transition-colors ${
+                !recurring ? "bg-slate-100 text-slate-900" : "text-slate-400 hover:text-white"
+              }`}
+            >
+              No
+            </button>
+          </div>
+        </div>
+        {recurring && (
+          <div className="flex flex-col gap-1 text-xs text-slate-400">
+            Frequency
+            <div className="inline-flex rounded-lg bg-slate-900 border border-slate-700 p-1 gap-1 w-fit">
+              <button
+                type="button"
+                onClick={() => setRecurringFrequency("weekly")}
+                className={`px-3 py-1 text-sm font-medium rounded-md transition-colors ${
+                  recurringFrequency === "weekly" ? "bg-slate-100 text-slate-900" : "text-slate-400 hover:text-white"
+                }`}
+              >
+                Weekly
+              </button>
+              <button
+                type="button"
+                onClick={() => setRecurringFrequency("monthly")}
+                className={`px-3 py-1 text-sm font-medium rounded-md transition-colors ${
+                  recurringFrequency === "monthly" ? "bg-slate-100 text-slate-900" : "text-slate-400 hover:text-white"
+                }`}
+              >
+                Monthly
+              </button>
+            </div>
+          </div>
+        )}
+        <label className="flex flex-col gap-1 text-xs text-slate-400 col-span-2">
+          Receipt (optional)
+          <input
+            type="file"
+            accept="image/*,application/pdf"
+            onChange={(e) => setReceiptFile(e.target.files?.[0] ?? null)}
+            className="rounded-lg bg-slate-900 border border-slate-700 px-3 py-2 text-slate-300 text-sm file:mr-3 file:rounded-md file:border-0 file:bg-slate-700 file:text-slate-200 file:px-3 file:py-1.5 file:text-xs file:font-medium"
+          />
+          {receiptFile && <span className="text-slate-500 truncate">{receiptFile.name}</span>}
+        </label>
       </div>
 
       <div className="text-xs text-slate-400">

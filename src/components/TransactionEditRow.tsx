@@ -5,7 +5,7 @@ import { dateInputToISO, isoToDateInput } from "../utils/date";
 import { DateInput } from "./DateInput";
 
 export function TransactionEditRow({ transaction, onDone }: { transaction: Transaction; onDone: () => void }) {
-  const { updateTransaction, listNames } = useLedger();
+  const { updateTransaction, attachReceipt, removeReceipt, getReceiptUrl, listNames } = useLedger();
   const t = transaction;
 
   const [amount, setAmount] = useState(String(t.amount));
@@ -14,11 +14,18 @@ export function TransactionEditRow({ transaction, onDone }: { transaction: Trans
   const [item, setItem] = useState(t.item ?? "");
   const [vendor, setVendor] = useState(t.vendor ?? "");
   const [accountMethod, setAccountMethod] = useState(t.accountMethod ?? "");
+  const [category, setCategory] = useState(t.category ?? "");
+  const [recurring, setRecurring] = useState(t.recurring ?? false);
+  const [recurringFrequency, setRecurringFrequency] = useState<Transaction["recurringFrequency"]>(
+    t.recurringFrequency ?? "monthly"
+  );
   const [date, setDate] = useState(isoToDateInput(t.date));
+  const [receiptBusy, setReceiptBusy] = useState(false);
 
   const vendorOptions = listNames(t.type === "expense" ? "vendor" : "firm");
   const cardOptions = listNames("accountMethod");
   const itemOptions = listNames("item");
+  const categoryOptions = listNames("category");
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -34,6 +41,9 @@ export function TransactionEditRow({ transaction, onDone }: { transaction: Trans
         item: item.trim(),
         vendor: vendor.trim() || undefined,
         accountMethod: accountMethod.trim() || undefined,
+        category: category.trim() || undefined,
+        recurring,
+        recurringFrequency: recurring ? recurringFrequency : undefined,
       });
     } else {
       updateTransaction(t.id, {
@@ -44,6 +54,39 @@ export function TransactionEditRow({ transaction, onDone }: { transaction: Trans
       });
     }
     onDone();
+  }
+
+  async function handleReceiptChange(file: File | null) {
+    if (!file) return;
+    setReceiptBusy(true);
+    try {
+      await attachReceipt(t.id, file);
+    } catch (err) {
+      console.error("Failed to attach receipt:", err);
+    } finally {
+      setReceiptBusy(false);
+    }
+  }
+
+  async function handleViewReceipt() {
+    if (!t.receiptPath) return;
+    try {
+      const url = await getReceiptUrl(t.receiptPath);
+      window.open(url, "_blank", "noopener,noreferrer");
+    } catch (err) {
+      console.error("Failed to open receipt:", err);
+    }
+  }
+
+  async function handleRemoveReceipt() {
+    setReceiptBusy(true);
+    try {
+      await removeReceipt(t.id);
+    } catch (err) {
+      console.error("Failed to remove receipt:", err);
+    } finally {
+      setReceiptBusy(false);
+    }
   }
 
   return (
@@ -122,9 +165,94 @@ export function TransactionEditRow({ transaction, onDone }: { transaction: Trans
                 placeholder="Purchases"
                 className="rounded-md bg-slate-900 border border-slate-700 px-2 py-1.5 text-white text-sm"
               />
+              <input
+                type="text"
+                list="edit-category-list"
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                placeholder="Category (for taxes)"
+                className="rounded-md bg-slate-900 border border-slate-700 px-2 py-1.5 text-white text-sm"
+              />
+              <datalist id="edit-category-list">
+                {categoryOptions.map((c) => (
+                  <option key={c} value={c} />
+                ))}
+              </datalist>
+              <div className="inline-flex rounded-md bg-slate-900 border border-slate-700 p-1 gap-1 w-fit">
+                <button
+                  type="button"
+                  onClick={() => setRecurring(true)}
+                  className={`px-2 py-1 text-xs font-medium rounded ${
+                    recurring ? "bg-slate-100 text-slate-900" : "text-slate-400 hover:text-white"
+                  }`}
+                >
+                  Recurring
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setRecurring(false)}
+                  className={`px-2 py-1 text-xs font-medium rounded ${
+                    !recurring ? "bg-slate-100 text-slate-900" : "text-slate-400 hover:text-white"
+                  }`}
+                >
+                  One-time
+                </button>
+              </div>
+              {recurring && (
+                <div className="inline-flex rounded-md bg-slate-900 border border-slate-700 p-1 gap-1 w-fit">
+                  <button
+                    type="button"
+                    onClick={() => setRecurringFrequency("weekly")}
+                    className={`px-2 py-1 text-xs font-medium rounded ${
+                      recurringFrequency === "weekly" ? "bg-slate-100 text-slate-900" : "text-slate-400 hover:text-white"
+                    }`}
+                  >
+                    Weekly
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setRecurringFrequency("monthly")}
+                    className={`px-2 py-1 text-xs font-medium rounded ${
+                      recurringFrequency === "monthly" ? "bg-slate-100 text-slate-900" : "text-slate-400 hover:text-white"
+                    }`}
+                  >
+                    Monthly
+                  </button>
+                </div>
+              )}
             </>
           )}
           <DateInput value={date} onChange={setDate} compact />
+        </div>
+        <div className="flex items-center justify-between gap-2 text-xs">
+          <div className="flex items-center gap-2 min-w-0">
+            {t.receiptPath ? (
+              <>
+                <button type="button" onClick={handleViewReceipt} className="text-slate-300 hover:text-white shrink-0">
+                  📎 View receipt
+                </button>
+                <button
+                  type="button"
+                  onClick={handleRemoveReceipt}
+                  disabled={receiptBusy}
+                  className="text-slate-500 hover:text-rose-400 shrink-0 disabled:opacity-50"
+                >
+                  Remove
+                </button>
+              </>
+            ) : (
+              <label className="text-slate-500 hover:text-slate-300 cursor-pointer shrink-0">
+                {receiptBusy ? "Uploading…" : "+ Attach receipt"}
+                <input
+                  type="file"
+                  accept="image/*,application/pdf"
+                  className="hidden"
+                  disabled={receiptBusy}
+                  onChange={(e) => handleReceiptChange(e.target.files?.[0] ?? null)}
+                />
+              </label>
+            )}
+          </div>
         </div>
         <div className="flex items-center gap-2 justify-end">
           <button type="button" onClick={onDone} className="text-slate-500 hover:text-slate-300 text-xs px-2 py-1">

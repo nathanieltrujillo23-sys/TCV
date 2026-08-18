@@ -13,6 +13,10 @@ function toTransaction(row: Record<string, unknown>): Transaction {
     item: (row.item as string) ?? undefined,
     vendor: (row.vendor as string) ?? undefined,
     accountMethod: (row.account_method as string) ?? undefined,
+    category: (row.category as string) ?? undefined,
+    receiptPath: (row.receipt_path as string) ?? undefined,
+    recurring: row.recurring == null ? undefined : Boolean(row.recurring),
+    recurringFrequency: (row.recurring_frequency as Transaction["recurringFrequency"]) ?? undefined,
     presetId: (row.preset_id as string) ?? undefined,
   };
 }
@@ -29,6 +33,10 @@ function fromTransaction(t: Transaction, userId: string) {
     item: t.item ?? null,
     vendor: t.vendor ?? null,
     account_method: t.accountMethod ?? null,
+    category: t.category ?? null,
+    receipt_path: t.receiptPath ?? null,
+    recurring: t.recurring ?? false,
+    recurring_frequency: t.recurring ? (t.recurringFrequency ?? "monthly") : null,
     preset_id: t.presetId ?? null,
   };
 }
@@ -168,6 +176,24 @@ export function createSupabaseRepository(userId: string): LedgerRepository {
     async insertAuditEntry(a) {
       const { error } = await supabase.from("audit_log").insert(fromAuditEntry(a, userId));
       assertOk(error, "insertAuditEntry");
+    },
+
+    async uploadReceipt(transactionId, file) {
+      const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+      const path = `${userId}/${transactionId}/${Date.now()}-${safeName}`;
+      const { error } = await supabase.storage.from("receipts").upload(path, file, { upsert: true });
+      assertOk(error, "uploadReceipt");
+      return path;
+    },
+    async deleteReceipt(path) {
+      const { error } = await supabase.storage.from("receipts").remove([path]);
+      assertOk(error, "deleteReceipt");
+    },
+    async getReceiptUrl(path) {
+      const { data, error } = await supabase.storage.from("receipts").createSignedUrl(path, 3600);
+      assertOk(error, "getReceiptUrl");
+      if (!data) throw new Error("getReceiptUrl: no signed URL returned");
+      return data.signedUrl;
     },
   };
 }

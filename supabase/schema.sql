@@ -15,6 +15,10 @@ create table transactions (
   item text,               -- expense only
   vendor text,              -- expense: "where bought"; income: firm/source
   account_method text,      -- expense only: card/bank used
+  category text,            -- expense only: tax/reporting category
+  receipt_path text,        -- storage path in the "receipts" bucket, either type
+  recurring boolean default false, -- expense only
+  recurring_frequency text check (recurring_frequency is null or recurring_frequency in ('weekly', 'monthly')),
   preset_id uuid,
   created_at timestamptz default now()
 );
@@ -44,7 +48,7 @@ create index idx_presets_user on presets (user_id);
 create table managed_list_items (
   id uuid primary key default uuid_generate_v4(),
   user_id uuid references auth.users(id) not null,
-  category text not null check (category in ('vendor', 'accountMethod', 'firm', 'item')),
+  category text not null check (category in ('vendor', 'accountMethod', 'firm', 'item', 'category')),
   name text not null,
   created_at timestamptz default now(),
   unique (user_id, category, name)
@@ -90,3 +94,14 @@ create policy "Users manage their own audit log"
   on audit_log for all
   using (user_id = auth.uid())
   with check (user_id = auth.uid());
+
+-- Private bucket for receipt/invoice attachments, one folder per user
+-- (receipts/<user_id>/<transaction_id>/<filename>).
+insert into storage.buckets (id, name, public)
+values ('receipts', 'receipts', false)
+on conflict (id) do nothing;
+
+create policy "Users manage their own receipts"
+  on storage.objects for all
+  using (bucket_id = 'receipts' and (storage.foldername(name))[1] = auth.uid()::text)
+  with check (bucket_id = 'receipts' and (storage.foldername(name))[1] = auth.uid()::text);
