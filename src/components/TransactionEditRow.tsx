@@ -3,10 +3,17 @@ import { useLedger } from "../state/LedgerContext";
 import type { Transaction } from "../types";
 import { dateInputToISO, isoToDateInput } from "../utils/date";
 import { DateInput } from "./DateInput";
+import { Modal } from "./Modal";
 
 export function TransactionEditRow({ transaction, onDone }: { transaction: Transaction; onDone: () => void }) {
-  const { updateTransaction, attachReceipt, removeReceipt, getReceiptUrl, listNames } = useLedger();
+  const { transactions, updateTransaction, attachReceipt, removeReceipt, getReceiptUrl, listNames } = useLedger();
   const t = transaction;
+
+  const [bulkCategoryPrompt, setBulkCategoryPrompt] = useState<{
+    vendor: string;
+    category: string;
+    ids: string[];
+  } | null>(null);
 
   const [amount, setAmount] = useState(String(t.amount));
   const [accounts, setAccounts] = useState(String(t.accounts ?? 1));
@@ -34,17 +41,33 @@ export function TransactionEditRow({ transaction, onDone }: { transaction: Trans
     const isoDate = dateInputToISO(date, t.date);
 
     if (t.type === "expense") {
+      const trimmedVendor = vendor.trim() || undefined;
+      const trimmedCategory = category.trim() || undefined;
       updateTransaction(t.id, {
         date: isoDate,
         amount: amt,
         purchases: parseInt(purchases, 10) || 1,
         item: item.trim(),
-        vendor: vendor.trim() || undefined,
+        vendor: trimmedVendor,
         accountMethod: accountMethod.trim() || undefined,
-        category: category.trim() || undefined,
+        category: trimmedCategory,
         recurring,
         recurringFrequency: recurring ? recurringFrequency : undefined,
       });
+
+      if (trimmedCategory && trimmedVendor && trimmedCategory !== (t.category ?? undefined)) {
+        const others = transactions.filter(
+          (o) =>
+            o.type === "expense" &&
+            o.id !== t.id &&
+            (o.vendor ?? "").trim().toLowerCase() === trimmedVendor.toLowerCase() &&
+            (o.category ?? "") !== trimmedCategory
+        );
+        if (others.length > 0) {
+          setBulkCategoryPrompt({ vendor: trimmedVendor, category: trimmedCategory, ids: others.map((o) => o.id) });
+          return;
+        }
+      }
     } else {
       updateTransaction(t.id, {
         date: isoDate,
@@ -53,6 +76,18 @@ export function TransactionEditRow({ transaction, onDone }: { transaction: Trans
         vendor: vendor.trim(),
       });
     }
+    onDone();
+  }
+
+  function applyBulkCategory() {
+    if (!bulkCategoryPrompt) return;
+    for (const id of bulkCategoryPrompt.ids) updateTransaction(id, { category: bulkCategoryPrompt.category });
+    setBulkCategoryPrompt(null);
+    onDone();
+  }
+
+  function dismissBulkCategory() {
+    setBulkCategoryPrompt(null);
     onDone();
   }
 
@@ -266,6 +301,34 @@ export function TransactionEditRow({ transaction, onDone }: { transaction: Trans
           </button>
         </div>
       </form>
+
+      {bulkCategoryPrompt && (
+        <Modal title="Apply to other transactions?" onClose={dismissBulkCategory}>
+          <div className="flex flex-col gap-3">
+            <p className="text-slate-300 text-sm">
+              Set category to <span className="font-medium text-white">{bulkCategoryPrompt.category}</span> for{" "}
+              {bulkCategoryPrompt.ids.length} other {bulkCategoryPrompt.vendor} expense
+              {bulkCategoryPrompt.ids.length === 1 ? "" : "s"} too?
+            </p>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={dismissBulkCategory}
+                className="flex-1 rounded-lg bg-slate-900 border border-slate-700 text-slate-300 text-sm font-medium py-2 hover:text-white"
+              >
+                Just this one
+              </button>
+              <button
+                type="button"
+                onClick={applyBulkCategory}
+                className="flex-1 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-sm font-medium py-2"
+              >
+                Apply to all
+              </button>
+            </div>
+          </div>
+        </Modal>
+      )}
     </li>
   );
 }
