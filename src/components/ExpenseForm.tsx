@@ -1,8 +1,9 @@
 import { useState, type FormEvent } from "react";
 import { useLedger } from "../state/LedgerContext";
 import { formatCurrency } from "../utils/format";
-import { dateInputToISO, todayInputValue } from "../utils/date";
+import { dateInputToISO, generateRecurringDates, todayInputValue } from "../utils/date";
 import { DateInput } from "./DateInput";
+import { Modal } from "./Modal";
 import type { Transaction } from "../types";
 
 export function ExpenseForm() {
@@ -16,6 +17,7 @@ export function ExpenseForm() {
   const [date, setDate] = useState(todayInputValue());
   const [recurring, setRecurring] = useState(false);
   const [recurringFrequency, setRecurringFrequency] = useState<Transaction["recurringFrequency"]>("monthly");
+  const [recurringEndDate, setRecurringEndDate] = useState("");
   const [receiptFile, setReceiptFile] = useState<File | null>(null);
   const [justLogged, setJustLogged] = useState<{
     price: number;
@@ -23,6 +25,18 @@ export function ExpenseForm() {
     vendor: string;
     accountMethod: string;
     purchases: number;
+  } | null>(null);
+  const [pendingSeries, setPendingSeries] = useState<{
+    dates: string[];
+    frequency: Transaction["recurringFrequency"];
+    fields: {
+      amount: number;
+      purchases: number;
+      item: string;
+      vendor?: string;
+      accountMethod?: string;
+      category?: string;
+    };
   } | null>(null);
 
   const items = listNames("item");
@@ -40,6 +54,7 @@ export function ExpenseForm() {
     setDate(todayInputValue());
     setRecurring(false);
     setRecurringFrequency("monthly");
+    setRecurringEndDate("");
     setReceiptFile(null);
   }
 
@@ -48,16 +63,22 @@ export function ExpenseForm() {
     const amount = parseFloat(price);
     const count = parseInt(purchases, 10) || 1;
     if (!Number.isFinite(amount) || !item.trim()) return;
+    if (recurring && !recurringEndDate) return;
+
+    const trimmedVendor = vendor.trim() || undefined;
+    const trimmedAccountMethod = accountMethod.trim() || undefined;
+    const trimmedCategory = category.trim() || undefined;
+    const trimmedItem = item.trim();
 
     const tx = addTransaction({
       type: "expense",
       date: dateInputToISO(date),
       amount,
       purchases: count,
-      item: item.trim(),
-      vendor: vendor.trim() || undefined,
-      accountMethod: accountMethod.trim() || undefined,
-      category: category.trim() || undefined,
+      item: trimmedItem,
+      vendor: trimmedVendor,
+      accountMethod: trimmedAccountMethod,
+      category: trimmedCategory,
       recurring,
       recurringFrequency: recurring ? recurringFrequency : undefined,
     });
@@ -66,14 +87,56 @@ export function ExpenseForm() {
       attachReceipt(tx.id, receiptFile).catch((err) => console.error("Failed to attach receipt:", err));
     }
 
+    if (recurring && recurringEndDate) {
+      const dates = generateRecurringDates(date, recurringEndDate, recurringFrequency ?? "monthly");
+      const futureDates = dates.slice(1); // first date is the entry already logged above
+      if (futureDates.length > 0) {
+        setPendingSeries({
+          dates: futureDates,
+          frequency: recurringFrequency,
+          fields: {
+            amount,
+            purchases: count,
+            item: trimmedItem,
+            vendor: trimmedVendor,
+            accountMethod: trimmedAccountMethod,
+            category: trimmedCategory,
+          },
+        });
+      }
+    }
+
     setJustLogged({
       price: amount,
-      item: item.trim(),
+      item: trimmedItem,
       vendor: vendor.trim(),
       accountMethod: accountMethod.trim(),
       purchases: count,
     });
     reset();
+  }
+
+  function confirmSeries() {
+    if (!pendingSeries) return;
+    for (const d of pendingSeries.dates) {
+      addTransaction({
+        type: "expense",
+        date: dateInputToISO(d),
+        amount: pendingSeries.fields.amount,
+        purchases: pendingSeries.fields.purchases,
+        item: pendingSeries.fields.item,
+        vendor: pendingSeries.fields.vendor,
+        accountMethod: pendingSeries.fields.accountMethod,
+        category: pendingSeries.fields.category,
+        recurring: true,
+        recurringFrequency: pendingSeries.frequency,
+      });
+    }
+    setPendingSeries(null);
+  }
+
+  function dismissSeries() {
+    setPendingSeries(null);
   }
 
   function saveAsPreset() {
@@ -212,29 +275,42 @@ export function ExpenseForm() {
           </div>
         </div>
         {recurring && (
-          <div className="flex flex-col gap-1 text-xs text-slate-400">
-            Frequency
-            <div className="inline-flex rounded-lg bg-slate-900 border border-slate-700 p-1 gap-1 w-fit">
-              <button
-                type="button"
-                onClick={() => setRecurringFrequency("weekly")}
-                className={`px-3 py-1 text-sm font-medium rounded-md transition-colors ${
-                  recurringFrequency === "weekly" ? "bg-slate-100 text-slate-900" : "text-slate-400 hover:text-white"
-                }`}
-              >
-                Weekly
-              </button>
-              <button
-                type="button"
-                onClick={() => setRecurringFrequency("monthly")}
-                className={`px-3 py-1 text-sm font-medium rounded-md transition-colors ${
-                  recurringFrequency === "monthly" ? "bg-slate-100 text-slate-900" : "text-slate-400 hover:text-white"
-                }`}
-              >
-                Monthly
-              </button>
+          <>
+            <div className="flex flex-col gap-1 text-xs text-slate-400">
+              Frequency
+              <div className="inline-flex rounded-lg bg-slate-900 border border-slate-700 p-1 gap-1 w-fit">
+                <button
+                  type="button"
+                  onClick={() => setRecurringFrequency("weekly")}
+                  className={`px-3 py-1 text-sm font-medium rounded-md transition-colors ${
+                    recurringFrequency === "weekly" ? "bg-slate-100 text-slate-900" : "text-slate-400 hover:text-white"
+                  }`}
+                >
+                  Weekly
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setRecurringFrequency("monthly")}
+                  className={`px-3 py-1 text-sm font-medium rounded-md transition-colors ${
+                    recurringFrequency === "monthly" ? "bg-slate-100 text-slate-900" : "text-slate-400 hover:text-white"
+                  }`}
+                >
+                  Monthly
+                </button>
+              </div>
             </div>
-          </div>
+            <label className="flex flex-col gap-1 text-xs text-slate-400">
+              Ends on
+              <input
+                type="date"
+                required
+                min={date}
+                value={recurringEndDate}
+                onChange={(e) => setRecurringEndDate(e.target.value)}
+                className="rounded-lg bg-slate-900 border border-slate-700 px-3 py-2 text-white text-base focus:outline-none focus:border-slate-500"
+              />
+            </label>
+          </>
         )}
         <label className="flex flex-col gap-1 text-xs text-slate-400 col-span-2">
           Receipt (optional)
@@ -281,6 +357,34 @@ export function ExpenseForm() {
             </button>
           </div>
         </div>
+      )}
+
+      {pendingSeries && (
+        <Modal title="Log future occurrences?" onClose={dismissSeries}>
+          <div className="flex flex-col gap-3">
+            <p className="text-slate-300 text-sm">
+              Log {pendingSeries.dates.length} more {pendingSeries.frequency}{" "}
+              {pendingSeries.fields.item} charge{pendingSeries.dates.length === 1 ? "" : "s"} through{" "}
+              <span className="font-medium text-white">{pendingSeries.dates[pendingSeries.dates.length - 1]}</span>?
+            </p>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={dismissSeries}
+                className="flex-1 rounded-lg bg-slate-900 border border-slate-700 text-slate-300 text-sm font-medium py-2 hover:text-white"
+              >
+                No thanks
+              </button>
+              <button
+                type="button"
+                onClick={confirmSeries}
+                className="flex-1 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-sm font-medium py-2"
+              >
+                Log them
+              </button>
+            </div>
+          </div>
+        </Modal>
       )}
     </form>
   );
