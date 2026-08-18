@@ -1,28 +1,28 @@
 import { useMemo } from "react";
 import { useLedger } from "../state/LedgerContext";
-import { isWithinPeriod } from "../utils/period";
+import { isWithinRange } from "../utils/period";
 import { formatCurrency, transactionTotal } from "../utils/format";
 import { trendBuckets } from "../utils/trend";
 import { TrendChart } from "./TrendChart";
 
 export function Dashboard() {
-  const { transactions, period, periodReference, primaryView } = useLedger();
+  const { transactions, effectiveRange, primaryView } = useLedger();
 
   const { totalIncome, totalExpense } = useMemo(() => {
     let totalIncome = 0;
     let totalExpense = 0;
     for (const t of transactions) {
-      if (!isWithinPeriod(t.date, period, periodReference)) continue;
+      if (!isWithinRange(t.date, effectiveRange)) continue;
       const total = transactionTotal(t);
       if (t.type === "income") totalIncome += total;
       else totalExpense += total;
     }
     return { totalIncome, totalExpense };
-  }, [transactions, period, periodReference]);
+  }, [transactions, effectiveRange]);
 
   const trend = useMemo(
-    () => trendBuckets(period, transactions, primaryView, periodReference),
-    [transactions, period, primaryView, periodReference]
+    () => trendBuckets(effectiveRange, transactions, primaryView),
+    [transactions, primaryView, effectiveRange]
   );
 
   const net = totalIncome - totalExpense;

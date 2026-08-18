@@ -10,6 +10,7 @@ import type {
   ViewMode,
 } from "../types";
 import type { LedgerRepository, LedgerSnapshot } from "../data/repository";
+import { type DateRange, periodLabel, periodRange, rangeLabel } from "../utils/period";
 
 const MAX_AUDIT_ENTRIES = 500;
 
@@ -31,6 +32,16 @@ interface LedgerContextValue {
   // one unit of the current period without changing the period type.
   periodReference: Date;
   shiftPeriod: (direction: 1 | -1) => void;
+  // Set to page through weeks/months/quarters/years; cleared whenever a
+  // custom range is applied or a preset period is picked.
+  customRange: DateRange | null;
+  setCustomRange: (range: DateRange | null) => void;
+  // The date range actually in effect right now — customRange if set,
+  // otherwise the preset period resolved against periodReference. Every
+  // consumer should filter against this instead of period/periodReference
+  // directly so custom ranges apply everywhere automatically.
+  effectiveRange: DateRange;
+  effectiveLabel: string;
   primaryView: TransactionType;
   setPrimaryView: (v: TransactionType) => void;
   viewMode: ViewMode;
@@ -71,6 +82,7 @@ export function LedgerProvider({
   const [loadError, setLoadError] = useState<string | null>(null);
   const [period, setPeriodState] = useState<Period>("month");
   const [periodReference, setPeriodReference] = useState<Date>(() => new Date());
+  const [customRange, setCustomRange] = useState<DateRange | null>(null);
   const [primaryView, setPrimaryView] = useState<TransactionType>("income");
   const [viewMode, setViewMode] = useState<ViewMode>("entry");
 
@@ -101,9 +113,11 @@ export function LedgerProvider({
   const setPeriod: LedgerContextValue["setPeriod"] = (p) => {
     setPeriodState(p);
     setPeriodReference(new Date());
+    setCustomRange(null);
   };
 
   const shiftPeriod: LedgerContextValue["shiftPeriod"] = (direction) => {
+    setCustomRange(null);
     setPeriodReference((prev) => {
       const next = new Date(prev);
       if (period === "week") next.setDate(next.getDate() + 7 * direction);
@@ -113,6 +127,12 @@ export function LedgerProvider({
       return next;
     });
   };
+
+  const effectiveRange = useMemo<DateRange>(
+    () => customRange ?? periodRange(period, periodReference),
+    [customRange, period, periodReference]
+  );
+  const effectiveLabel = customRange ? rangeLabel(customRange) : periodLabel(period, periodReference);
 
   function logAudit(action: AuditEntry["action"], transactionId: string, before?: Transaction, after?: Transaction) {
     const entry: AuditEntry = { id: uid(), transactionId, action, timestamp: new Date().toISOString(), before, after };
@@ -292,6 +312,10 @@ export function LedgerProvider({
       setPeriod,
       periodReference,
       shiftPeriod,
+      customRange,
+      setCustomRange,
+      effectiveRange,
+      effectiveLabel,
       primaryView,
       setPrimaryView,
       viewMode,
@@ -309,7 +333,21 @@ export function LedgerProvider({
       importSnapshot,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [transactions, presets, managedLists, auditLog, loading, loadError, period, periodReference, primaryView, viewMode]
+    [
+      transactions,
+      presets,
+      managedLists,
+      auditLog,
+      loading,
+      loadError,
+      period,
+      periodReference,
+      customRange,
+      effectiveRange,
+      effectiveLabel,
+      primaryView,
+      viewMode,
+    ]
   );
 
   return <LedgerContext.Provider value={value}>{children}</LedgerContext.Provider>;

@@ -51,10 +51,7 @@ export function TrendChart({ points, color }: { points: TrendPoint[]; color: "em
         })}
       </svg>
       {hover !== null && (
-        <ChartTooltip
-          x={hover * slot + slot / 2}
-          y={chartHeight - (max === 0 ? 0 : (points[hover].value / max) * (chartHeight - 4))}
-        >
+        <ChartTooltip x={hover * slot + (slot - barWidth) / 2} y={chartHeight / 2}>
           {points[hover].label}: {formatCurrency(points[hover].value)}
         </ChartTooltip>
       )}

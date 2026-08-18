@@ -56,10 +56,7 @@ export function ComparisonTrendChart({ income, expense }: { income: TrendPoint[]
         })}
       </svg>
       {hover !== null && (
-        <ChartTooltip
-          x={hover * slot + slot / 2}
-          y={chartHeight - Math.max(income[hover].value, expense[hover]?.value ?? 0) / max * (chartHeight - 4)}
-        >
+        <ChartTooltip x={hover * slot + (slot - groupWidth) / 2} y={chartHeight / 2}>
           <div className="flex flex-col gap-0.5">
             <span>{income[hover].label}</span>
             <span className="text-emerald-400">+{formatCurrency(income[hover].value)}</span>

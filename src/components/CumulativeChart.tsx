@@ -39,7 +39,7 @@ export function CumulativeChart({ points }: { points: TrendPoint[] }) {
         ))}
       </svg>
       {hover !== null && (
-        <ChartTooltip x={hover * stepX} y={toY(points[hover].value)}>
+        <ChartTooltip x={hover * stepX} y={chartHeight / 2}>
           {points[hover].label}: {formatCurrency(points[hover].value)}
         </ChartTooltip>
       )}

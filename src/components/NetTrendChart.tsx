@@ -52,14 +52,7 @@ export function NetTrendChart({ points }: { points: TrendPoint[] }) {
         })}
       </svg>
       {hover !== null && (
-        <ChartTooltip
-          x={hover * slot + slot / 2}
-          y={
-            points[hover].value >= 0
-              ? halfHeight - (Math.abs(points[hover].value) / maxAbs) * (halfHeight - 4)
-              : halfHeight
-          }
-        >
+        <ChartTooltip x={hover * slot + (slot - barWidth) / 2} y={halfHeight}>
           {points[hover].label}: {points[hover].value >= 0 ? "+" : "-"}
           {formatCurrency(Math.abs(points[hover].value))}
         </ChartTooltip>

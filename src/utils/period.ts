@@ -1,6 +1,11 @@
 import type { Period } from "../types";
 
-export function periodRange(period: Period, reference: Date = new Date()): { start: Date; end: Date } {
+export interface DateRange {
+  start: Date;
+  end: Date; // exclusive
+}
+
+export function periodRange(period: Period, reference: Date = new Date()): DateRange {
   const start = new Date(reference);
   const end = new Date(reference);
 
@@ -41,10 +46,13 @@ export function periodRange(period: Period, reference: Date = new Date()): { sta
   return { start, end };
 }
 
-export function isWithinPeriod(dateISO: string, period: Period, reference: Date = new Date()): boolean {
-  const { start, end } = periodRange(period, reference);
+export function isWithinRange(dateISO: string, range: DateRange): boolean {
   const t = new Date(dateISO).getTime();
-  return t >= start.getTime() && t < end.getTime();
+  return t >= range.start.getTime() && t < range.end.getTime();
+}
+
+export function isWithinPeriod(dateISO: string, period: Period, reference: Date = new Date()): boolean {
+  return isWithinRange(dateISO, periodRange(period, reference));
 }
 
 export function periodLabel(period: Period, reference: Date = new Date()): string {
@@ -61,4 +69,16 @@ export function periodLabel(period: Period, reference: Date = new Date()): strin
     case "year":
       return `${start.getFullYear()}`;
   }
+}
+
+export function rangeLabel(range: DateRange): string {
+  const endInclusive = new Date(range.end.getTime() - 1);
+  const sameYear = range.start.getFullYear() === endInclusive.getFullYear();
+  const startStr = range.start.toLocaleDateString(undefined, {
+    month: "short",
+    day: "numeric",
+    year: sameYear ? undefined : "numeric",
+  });
+  const endStr = endInclusive.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
+  return `${startStr} – ${endStr}`;
 }

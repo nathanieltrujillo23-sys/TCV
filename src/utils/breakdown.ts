@@ -1,5 +1,6 @@
-import type { Period, Transaction, TransactionType } from "../types";
-import { isWithinPeriod } from "./period";
+import type { Transaction, TransactionType } from "../types";
+import type { DateRange } from "./period";
+import { isWithinRange } from "./period";
 import { transactionTotal } from "./format";
 
 export interface BreakdownItem {
@@ -8,21 +9,20 @@ export interface BreakdownItem {
   percent: number;
 }
 
-// Groups a period's transactions of one type by counterparty (vendor for
+// Groups a range's transactions of one type by counterparty (vendor for
 // expenses, firm for income — both stored in the `vendor` field), collapsing
 // anything past `limit` into a single "Other" bucket.
 export function breakdownByCounterparty(
   transactions: Transaction[],
   type: TransactionType,
-  period: Period,
-  limit = 5,
-  reference: Date = new Date()
+  range: DateRange,
+  limit = 5
 ): BreakdownItem[] {
   const totals = new Map<string, number>();
 
   for (const t of transactions) {
     if (t.type !== type) continue;
-    if (!isWithinPeriod(t.date, period, reference)) continue;
+    if (!isWithinRange(t.date, range)) continue;
     const key = t.vendor?.trim() || "Unknown";
     totals.set(key, (totals.get(key) ?? 0) + transactionTotal(t));
   }

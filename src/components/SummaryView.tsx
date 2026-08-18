@@ -1,13 +1,14 @@
-import { useMemo } from "react";
-import { useLedger } from "../state/LedgerContext";
-import { isWithinPeriod } from "../utils/period";
-import { formatCurrency, transactionTotal } from "../utils/format";
-import { trendBuckets } from "../utils/trend";
-import { breakdownByCounterparty } from "../utils/breakdown";
+import { useState } from "react";
+import { formatCurrency } from "../utils/format";
+import { useSummaryData } from "../hooks/useSummaryData";
 import { ComparisonTrendChart } from "./ComparisonTrendChart";
 import { NetTrendChart } from "./NetTrendChart";
 import { CumulativeChart } from "./CumulativeChart";
 import { BreakdownList } from "./BreakdownList";
+import { PieChart } from "./PieChart";
+import { AveragesCard } from "./AveragesCard";
+import { VendorDetailModal } from "./VendorDetailModal";
+import type { TransactionType } from "../types";
 
 function StatTile({
   label,
@@ -28,51 +29,21 @@ function StatTile({
 }
 
 export function SummaryView() {
-  const { transactions, period, periodReference } = useLedger();
+  const {
+    effectiveRange,
+    totalIncome,
+    totalExpense,
+    net,
+    netMargin,
+    incomeTrend,
+    expenseTrend,
+    netTrend,
+    cumulativeNet,
+    expenseBreakdown,
+    incomeBreakdown,
+  } = useSummaryData();
 
-  const { totalIncome, totalExpense } = useMemo(() => {
-    let totalIncome = 0;
-    let totalExpense = 0;
-    for (const t of transactions) {
-      if (!isWithinPeriod(t.date, period, periodReference)) continue;
-      const total = transactionTotal(t);
-      if (t.type === "income") totalIncome += total;
-      else totalExpense += total;
-    }
-    return { totalIncome, totalExpense };
-  }, [transactions, period, periodReference]);
-
-  const net = totalIncome - totalExpense;
-  const netMargin = totalIncome > 0 ? (net / totalIncome) * 100 : null;
-
-  const incomeTrend = useMemo(
-    () => trendBuckets(period, transactions, "income", periodReference),
-    [transactions, period, periodReference]
-  );
-  const expenseTrend = useMemo(
-    () => trendBuckets(period, transactions, "expense", periodReference),
-    [transactions, period, periodReference]
-  );
-  const netTrend = useMemo(
-    () => incomeTrend.map((p, i) => ({ label: p.label, value: p.value - (expenseTrend[i]?.value ?? 0) })),
-    [incomeTrend, expenseTrend]
-  );
-  const cumulativeNet = useMemo(() => {
-    let running = 0;
-    return netTrend.map((p) => {
-      running += p.value;
-      return { label: p.label, value: running };
-    });
-  }, [netTrend]);
-
-  const expenseBreakdown = useMemo(
-    () => breakdownByCounterparty(transactions, "expense", period, 5, periodReference),
-    [transactions, period, periodReference]
-  );
-  const incomeBreakdown = useMemo(
-    () => breakdownByCounterparty(transactions, "income", period, 5, periodReference),
-    [transactions, period, periodReference]
-  );
+  const [selected, setSelected] = useState<{ type: TransactionType; label: string } | null>(null);
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-5 flex flex-col gap-4">
@@ -87,7 +58,9 @@ export function SummaryView() {
         />
       </div>
 
-      <div className="rounded-2xl bg-slate-800 p-4">
+      <AveragesCard />
+
+      <div id="summary-chart-comparison" className="rounded-2xl bg-slate-800 p-4">
         <div className="flex items-center gap-4 mb-2">
           <h2 className="text-slate-200 font-semibold text-sm mr-auto">Income vs expenses</h2>
           <span className="flex items-center gap-1 text-slate-400 text-xs">
@@ -100,26 +73,48 @@ export function SummaryView() {
         <ComparisonTrendChart income={incomeTrend} expense={expenseTrend} />
       </div>
 
-      <div className="rounded-2xl bg-slate-800 p-4">
+      <div id="summary-chart-net" className="rounded-2xl bg-slate-800 p-4">
         <h2 className="text-slate-200 font-semibold text-sm mb-2">Net per period</h2>
         <NetTrendChart points={netTrend} />
       </div>
 
-      <div className="rounded-2xl bg-slate-800 p-4">
+      <div id="summary-chart-cumulative" className="rounded-2xl bg-slate-800 p-4">
         <h2 className="text-slate-200 font-semibold text-sm mb-2">Cumulative net</h2>
         <CumulativeChart points={cumulativeNet} />
+      </div>
+
+      <div id="summary-chart-pie" className="rounded-2xl bg-slate-800 p-4">
+        <h2 className="text-slate-200 font-semibold text-sm mb-3">Where expenses went</h2>
+        <PieChart items={expenseBreakdown} />
       </div>
 
       <div className="grid sm:grid-cols-2 gap-4">
         <div className="rounded-2xl bg-slate-800 p-4">
           <h2 className="text-slate-200 font-semibold text-sm mb-2">Top expense vendors</h2>
-          <BreakdownList items={expenseBreakdown} color="rose" />
+          <BreakdownList
+            items={expenseBreakdown}
+            color="rose"
+            onSelect={(label) => setSelected({ type: "expense", label })}
+          />
         </div>
         <div className="rounded-2xl bg-slate-800 p-4">
           <h2 className="text-slate-200 font-semibold text-sm mb-2">Top income sources</h2>
-          <BreakdownList items={incomeBreakdown} color="emerald" />
+          <BreakdownList
+            items={incomeBreakdown}
+            color="emerald"
+            onSelect={(label) => setSelected({ type: "income", label })}
+          />
         </div>
       </div>
+
+      {selected && (
+        <VendorDetailModal
+          type={selected.type}
+          label={selected.label}
+          range={effectiveRange}
+          onClose={() => setSelected(null)}
+        />
+      )}
     </div>
   );
 }
