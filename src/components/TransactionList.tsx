@@ -1,26 +1,29 @@
 import { useMemo, useState } from "react";
 import { useLedger } from "../state/LedgerContext";
-import { isWithinPeriod } from "../utils/period";
+import { isWithinPeriod, periodLabel } from "../utils/period";
 import { formatCurrency, transactionTotal } from "../utils/format";
 import type { Transaction } from "../types";
 import { TransactionEditRow } from "./TransactionEditRow";
 
 export function TransactionList({ type }: { type: "income" | "expense" }) {
-  const { transactions, period, deleteTransaction } = useLedger();
+  const { transactions, period, periodReference, deleteTransaction } = useLedger();
   const [editingId, setEditingId] = useState<string | null>(null);
 
   const filtered = useMemo(
     () =>
       transactions
-        .filter((t) => t.type === type && isWithinPeriod(t.date, period))
+        .filter((t) => t.type === type && isWithinPeriod(t.date, period, periodReference))
         .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()),
-    [transactions, type, period]
+    [transactions, type, period, periodReference]
   );
 
   if (filtered.length === 0) {
     return (
       <div className="rounded-2xl bg-slate-800 p-4">
-        <h2 className="text-slate-200 font-semibold text-sm mb-1">Entries</h2>
+        <div className="flex items-baseline justify-between gap-2 mb-1">
+          <h2 className="text-slate-200 font-semibold text-sm">Entries</h2>
+          <span className="text-slate-500 text-xs">{periodLabel(period, periodReference)}</span>
+        </div>
         <p className="text-slate-500 text-xs">No {type} entries in this period.</p>
       </div>
     );
@@ -28,7 +31,10 @@ export function TransactionList({ type }: { type: "income" | "expense" }) {
 
   return (
     <div className="rounded-2xl bg-slate-800 p-4">
-      <h2 className="text-slate-200 font-semibold text-sm mb-2">Entries ({filtered.length})</h2>
+      <div className="flex items-baseline justify-between gap-2 mb-2">
+        <h2 className="text-slate-200 font-semibold text-sm">Entries ({filtered.length})</h2>
+        <span className="text-slate-500 text-xs">{periodLabel(period, periodReference)}</span>
+      </div>
       <ul className="flex flex-col divide-y divide-slate-700">
         {filtered.map((t) =>
           editingId === t.id ? (

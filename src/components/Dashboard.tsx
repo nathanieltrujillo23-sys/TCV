@@ -6,21 +6,24 @@ import { trendBuckets } from "../utils/trend";
 import { TrendChart } from "./TrendChart";
 
 export function Dashboard() {
-  const { transactions, period, primaryView } = useLedger();
+  const { transactions, period, periodReference, primaryView } = useLedger();
 
   const { totalIncome, totalExpense } = useMemo(() => {
     let totalIncome = 0;
     let totalExpense = 0;
     for (const t of transactions) {
-      if (!isWithinPeriod(t.date, period)) continue;
+      if (!isWithinPeriod(t.date, period, periodReference)) continue;
       const total = transactionTotal(t);
       if (t.type === "income") totalIncome += total;
       else totalExpense += total;
     }
     return { totalIncome, totalExpense };
-  }, [transactions, period]);
+  }, [transactions, period, periodReference]);
 
-  const trend = useMemo(() => trendBuckets(period, transactions, primaryView), [transactions, period, primaryView]);
+  const trend = useMemo(
+    () => trendBuckets(period, transactions, primaryView, periodReference),
+    [transactions, period, primaryView, periodReference]
+  );
 
   const net = totalIncome - totalExpense;
   const primaryTotal = primaryView === "income" ? totalIncome : totalExpense;

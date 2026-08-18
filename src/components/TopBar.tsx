@@ -56,7 +56,7 @@ function ViewModeToggle() {
 }
 
 export function TopBar() {
-  const { period, setPeriod } = useLedger();
+  const { period, setPeriod, periodReference, shiftPeriod } = useLedger();
 
   return (
     <header className="sticky top-0 z-10 bg-slate-900 border-b border-slate-800">
@@ -64,10 +64,28 @@ export function TopBar() {
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h1 className="text-white font-semibold text-lg leading-tight">TRUCAPITALVENTURES</h1>
-            <p className="text-slate-400 text-xs">{periodLabel(period)}</p>
+            <p className="text-slate-400 text-xs">{periodLabel(period, periodReference)}</p>
           </div>
           <div className="flex items-center gap-2 flex-wrap">
-            <Segmented options={PERIOD_OPTIONS} value={period} onChange={setPeriod} />
+            <div className="inline-flex items-center gap-1">
+              <button
+                type="button"
+                onClick={() => shiftPeriod(-1)}
+                aria-label={`Previous ${period}`}
+                className="w-7 h-7 flex items-center justify-center rounded-md bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 text-sm"
+              >
+                ‹
+              </button>
+              <Segmented options={PERIOD_OPTIONS} value={period} onChange={setPeriod} />
+              <button
+                type="button"
+                onClick={() => shiftPeriod(1)}
+                aria-label={`Next ${period}`}
+                className="w-7 h-7 flex items-center justify-center rounded-md bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 text-sm"
+              >
+                ›
+              </button>
+            </div>
             <ViewModeToggle />
           </div>
         </div>

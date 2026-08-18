@@ -15,13 +15,14 @@ export function breakdownByCounterparty(
   transactions: Transaction[],
   type: TransactionType,
   period: Period,
-  limit = 5
+  limit = 5,
+  reference: Date = new Date()
 ): BreakdownItem[] {
   const totals = new Map<string, number>();
 
   for (const t of transactions) {
     if (t.type !== type) continue;
-    if (!isWithinPeriod(t.date, period)) continue;
+    if (!isWithinPeriod(t.date, period, reference)) continue;
     const key = t.vendor?.trim() || "Unknown";
     totals.set(key, (totals.get(key) ?? 0) + transactionTotal(t));
   }

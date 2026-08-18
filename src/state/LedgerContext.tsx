@@ -26,6 +26,11 @@ interface LedgerContextValue {
   loadError: string | null;
   period: Period;
   setPeriod: (p: Period) => void;
+  // Anchor date the selected period is computed relative to. Changing
+  // `period` resets this to today; shiftPeriod pages it back/forward by
+  // one unit of the current period without changing the period type.
+  periodReference: Date;
+  shiftPeriod: (direction: 1 | -1) => void;
   primaryView: TransactionType;
   setPrimaryView: (v: TransactionType) => void;
   viewMode: ViewMode;
@@ -64,7 +69,8 @@ export function LedgerProvider({
   const [auditLog, setAuditLog] = useState<AuditEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
-  const [period, setPeriod] = useState<Period>("month");
+  const [period, setPeriodState] = useState<Period>("month");
+  const [periodReference, setPeriodReference] = useState<Date>(() => new Date());
   const [primaryView, setPrimaryView] = useState<TransactionType>("income");
   const [viewMode, setViewMode] = useState<ViewMode>("entry");
 
@@ -91,6 +97,22 @@ export function LedgerProvider({
       cancelled = true;
     };
   }, [repository]);
+
+  const setPeriod: LedgerContextValue["setPeriod"] = (p) => {
+    setPeriodState(p);
+    setPeriodReference(new Date());
+  };
+
+  const shiftPeriod: LedgerContextValue["shiftPeriod"] = (direction) => {
+    setPeriodReference((prev) => {
+      const next = new Date(prev);
+      if (period === "week") next.setDate(next.getDate() + 7 * direction);
+      else if (period === "month") next.setMonth(next.getMonth() + direction);
+      else if (period === "quarter") next.setMonth(next.getMonth() + 3 * direction);
+      else next.setFullYear(next.getFullYear() + direction);
+      return next;
+    });
+  };
 
   function logAudit(action: AuditEntry["action"], transactionId: string, before?: Transaction, after?: Transaction) {
     const entry: AuditEntry = { id: uid(), transactionId, action, timestamp: new Date().toISOString(), before, after };
@@ -268,6 +290,8 @@ export function LedgerProvider({
       loadError,
       period,
       setPeriod,
+      periodReference,
+      shiftPeriod,
       primaryView,
       setPrimaryView,
       viewMode,
@@ -285,7 +309,7 @@ export function LedgerProvider({
       importSnapshot,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [transactions, presets, managedLists, auditLog, loading, loadError, period, primaryView, viewMode]
+    [transactions, presets, managedLists, auditLog, loading, loadError, period, periodReference, primaryView, viewMode]
   );
 
   return <LedgerContext.Provider value={value}>{children}</LedgerContext.Provider>;

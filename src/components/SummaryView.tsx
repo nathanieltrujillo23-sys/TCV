@@ -28,25 +28,31 @@ function StatTile({
 }
 
 export function SummaryView() {
-  const { transactions, period } = useLedger();
+  const { transactions, period, periodReference } = useLedger();
 
   const { totalIncome, totalExpense } = useMemo(() => {
     let totalIncome = 0;
     let totalExpense = 0;
     for (const t of transactions) {
-      if (!isWithinPeriod(t.date, period)) continue;
+      if (!isWithinPeriod(t.date, period, periodReference)) continue;
       const total = transactionTotal(t);
       if (t.type === "income") totalIncome += total;
       else totalExpense += total;
     }
     return { totalIncome, totalExpense };
-  }, [transactions, period]);
+  }, [transactions, period, periodReference]);
 
   const net = totalIncome - totalExpense;
   const netMargin = totalIncome > 0 ? (net / totalIncome) * 100 : null;
 
-  const incomeTrend = useMemo(() => trendBuckets(period, transactions, "income"), [transactions, period]);
-  const expenseTrend = useMemo(() => trendBuckets(period, transactions, "expense"), [transactions, period]);
+  const incomeTrend = useMemo(
+    () => trendBuckets(period, transactions, "income", periodReference),
+    [transactions, period, periodReference]
+  );
+  const expenseTrend = useMemo(
+    () => trendBuckets(period, transactions, "expense", periodReference),
+    [transactions, period, periodReference]
+  );
   const netTrend = useMemo(
     () => incomeTrend.map((p, i) => ({ label: p.label, value: p.value - (expenseTrend[i]?.value ?? 0) })),
     [incomeTrend, expenseTrend]
@@ -60,12 +66,12 @@ export function SummaryView() {
   }, [netTrend]);
 
   const expenseBreakdown = useMemo(
-    () => breakdownByCounterparty(transactions, "expense", period),
-    [transactions, period]
+    () => breakdownByCounterparty(transactions, "expense", period, 5, periodReference),
+    [transactions, period, periodReference]
   );
   const incomeBreakdown = useMemo(
-    () => breakdownByCounterparty(transactions, "income", period),
-    [transactions, period]
+    () => breakdownByCounterparty(transactions, "income", period, 5, periodReference),
+    [transactions, period, periodReference]
   );
 
   return (
