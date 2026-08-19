@@ -36,6 +36,7 @@ export function SummaryView() {
     effectiveRange,
     totalIncome,
     totalExpense,
+    expenseTransactionCount,
     net,
     netMargin,
     incomeTrend,
@@ -55,7 +56,7 @@ export function SummaryView() {
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-5 flex flex-col gap-4">
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+      <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
         <StatTile label="Income" value={formatCurrency(totalIncome)} tone="emerald" />
         <StatTile label="Expenses" value={formatCurrency(totalExpense)} tone="rose" />
         <StatTile label="Net" value={formatCurrency(net)} tone={net >= 0 ? "emerald" : "rose"} />
@@ -64,6 +65,7 @@ export function SummaryView() {
           value={netMargin === null ? "—" : `${netMargin.toFixed(0)}%`}
           tone={netMargin === null ? "neutral" : netMargin >= 0 ? "emerald" : "rose"}
         />
+        <StatTile label="Expense transactions" value={String(expenseTransactionCount)} tone="rose" />
       </div>
 
       <AveragesCard />

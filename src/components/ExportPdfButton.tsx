@@ -15,6 +15,7 @@ export function ExportPdfButton() {
     effectiveRange,
     totalIncome,
     totalExpense,
+    expenseTransactionCount,
     net,
     netMargin,
     incomeTrend,
@@ -61,7 +62,7 @@ export function ExportPdfButton() {
       await exportSummaryPdf({
         transactions,
         range: effectiveRange,
-        totals: { income: totalIncome, expense: totalExpense, net, netMargin },
+        totals: { income: totalIncome, expense: totalExpense, expenseTransactionCount, net, netMargin },
         charts,
         expenseBreakdown,
         categoryBreakdown,

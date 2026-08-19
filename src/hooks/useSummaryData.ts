@@ -13,16 +13,23 @@ const FORECAST_PERIODS = 3;
 export function useSummaryData() {
   const { transactions, effectiveRange } = useLedger();
 
-  const { totalIncome, totalExpense } = useMemo(() => {
+  const { totalIncome, totalExpense, expenseTransactionCount } = useMemo(() => {
     let totalIncome = 0;
     let totalExpense = 0;
+    let expenseTransactionCount = 0;
     for (const t of transactions) {
       if (!isWithinRange(t.date, effectiveRange)) continue;
       const total = transactionTotal(t);
-      if (t.type === "income") totalIncome += total;
-      else totalExpense += total;
+      if (t.type === "income") {
+        totalIncome += total;
+      } else {
+        totalExpense += total;
+        // Counts each purchase within a multi-purchase entry, not just the
+        // logged row, so e.g. "5 purchases" on one entry counts as 5.
+        expenseTransactionCount += t.purchases ?? 1;
+      }
     }
-    return { totalIncome, totalExpense };
+    return { totalIncome, totalExpense, expenseTransactionCount };
   }, [transactions, effectiveRange]);
 
   const net = totalIncome - totalExpense;
@@ -81,6 +88,7 @@ export function useSummaryData() {
     effectiveRange,
     totalIncome,
     totalExpense,
+    expenseTransactionCount,
     net,
     netMargin,
     incomeTrend,

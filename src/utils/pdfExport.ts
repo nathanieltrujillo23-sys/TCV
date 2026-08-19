@@ -26,7 +26,7 @@ export async function exportSummaryPdf({
 }: {
   transactions: Transaction[];
   range: DateRange;
-  totals: { income: number; expense: number; net: number; netMargin: number | null };
+  totals: { income: number; expense: number; expenseTransactionCount: number; net: number; netMargin: number | null };
   charts: ChartCapture[];
   expenseBreakdown: BreakdownItem[];
   categoryBreakdown: BreakdownItem[];
@@ -55,6 +55,7 @@ export async function exportSummaryPdf({
     `Expenses: ${formatCurrency(totals.expense)}`,
     `Net: ${formatCurrency(totals.net)}`,
     totals.netMargin !== null ? `Net margin: ${totals.netMargin.toFixed(0)}%` : null,
+    `Expense transactions: ${totals.expenseTransactionCount}`,
   ]
     .filter(Boolean)
     .join("    ");
