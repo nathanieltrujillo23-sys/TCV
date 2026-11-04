@@ -2,15 +2,20 @@ import { useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { useT } from "../../i18n/LanguageContext";
 import { useProfile } from "../../state/ProfileContext";
+import { useDocumentTitle } from "../../hooks/useDocumentTitle";
 
 /** First visit to the portal: the education disclaimer must be accepted once (saved to the profile). */
 export function DisclaimerGate({ children }: { children: ReactNode }) {
+  const { profile } = useProfile();
+  return profile?.disclaimerAcceptedAt ? <>{children}</> : <DisclaimerCard />;
+}
+
+function DisclaimerCard() {
   const t = useT();
-  const { profile, acceptDisclaimer } = useProfile();
+  useDocumentTitle("disclaimer.title");
+  const { acceptDisclaimer } = useProfile();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  if (profile?.disclaimerAcceptedAt) return <>{children}</>;
 
   async function accept() {
     setBusy(true);

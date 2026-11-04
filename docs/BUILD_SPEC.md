@@ -53,7 +53,7 @@ Signups stay open but always land as `client`. Existing ledger rows belong to Na
 
 ## 3. Route map
 
-**Public** (no auth): `/` home · `/about` · `/services` (education offerings, framed as education) · `/learn` (two free sample lessons) · `/contact` (form) · `/disclosures` · `/privacy` · `/terms` · `/signin` · `/signup`
+**Public** (no auth): `/` home · `/about` · `/services` (education offerings, framed as education) · `/learn` (two free sample lessons) · `/learn/:lessonId` (the two samples only) · `/contact` (form) · `/disclosures` · `/privacy` · `/terms` · `/signin` · `/signup`
 
 **Workspace** (any account with ledger or journal access, otherwise redirect to `/portal`; each page checks its own tool, and `/app/messages` requires `is_owner`):
 `/app` dashboard · `/app/ledger` (existing ledger, unchanged inside) · `/app/journal` · `/app/journal/new` · `/app/journal/:tradeId` · `/app/journal/import` · `/app/journal/stats` · `/app/accounts` (prop firm accounts) · `/app/portfolio` · `/app/messages` (contact form inbox)
