@@ -74,7 +74,7 @@ export function SignInPage({ initialMode = "signin" }: { initialMode?: "signin" 
           <Link to="/">
             <BrandMark />
           </Link>
-          <p className="text-ink-soft text-sm">{t("auth.subtitle")}</p>
+          <p className="text-ink-soft text-sm">{t(mode === "signin" ? "auth.subtitle" : "auth.subtitleSignUp")}</p>
         </div>
 
         <div className="bg-paper border border-line border-t-2 border-t-ink">

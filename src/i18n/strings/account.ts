@@ -1,5 +1,6 @@
 export const account = {
   "account.type.label": "I am signing up as",
+  "account.type.labelEdit": "Account type",
   "account.type.person": "An individual",
   "account.type.business": "A business",
   "account.employment.label": "Employment",

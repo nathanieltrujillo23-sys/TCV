@@ -1,5 +1,6 @@
 export const auth = {
   "auth.subtitle": "Sign in to your account",
+  "auth.subtitleSignUp": "Create your account",
   "auth.tab.signIn": "Sign in",
   "auth.tab.signUp": "Create account",
   "auth.email": "Email",

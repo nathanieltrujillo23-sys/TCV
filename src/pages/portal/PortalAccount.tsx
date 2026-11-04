@@ -64,7 +64,7 @@ export function PortalAccount() {
           <h2 className="text-sm font-semibold">{t("account.edit.title")}</h2>
           <p className="mt-1 text-sm text-ink-soft">{t("account.edit.help")}</p>
         </div>
-        <AccountDetailsFields value={details} onChange={setDetails} />
+        <AccountDetailsFields value={details} onChange={setDetails} typeLabelKey="account.type.labelEdit" />
         {message && (
           <p className={`text-sm ${message.tone === "error" ? "text-red-700" : "text-accent"}`} role={message.tone === "error" ? "alert" : "status"}>
             {message.text}

@@ -26,16 +26,18 @@ export function AccountDetailsFields({
   value,
   onChange,
   businessName,
+  typeLabelKey = "account.type.label",
 }: {
   value: AccountDetailsValue;
   onChange: (next: AccountDetailsValue) => void;
   businessName?: { value: string; onChange: (name: string) => void };
+  typeLabelKey?: StringKey;
 }) {
   const t = useT();
   return (
     <div className="flex flex-col gap-4">
       <fieldset className="flex flex-col gap-1.5">
-        <legend className="text-sm font-medium mb-1.5">{t("account.type.label")}</legend>
+        <legend className="text-sm font-medium mb-1.5">{t(typeLabelKey)}</legend>
         <div className="flex gap-2">
           <Choice active={value.accountType === "person"} onClick={() => onChange({ ...value, accountType: "person" })}>
             {t("account.type.person")}
