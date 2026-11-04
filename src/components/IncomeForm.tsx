@@ -60,7 +60,7 @@ export function IncomeForm() {
   const total = (parseFloat(amount) || 0) * (parseInt(accounts, 10) || 1);
 
   return (
-    <form onSubmit={handleSubmit} className="rounded-2xl bg-slate-800 p-4 flex flex-col gap-3">
+    <form onSubmit={handleSubmit} className=" bg-slate-800 p-4 flex flex-col gap-3">
       <h2 className="text-slate-200 font-semibold text-sm">Log income</h2>
 
       <div className="grid grid-cols-2 gap-3">
@@ -74,7 +74,7 @@ export function IncomeForm() {
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
             placeholder="0.00"
-            className="rounded-lg bg-slate-900 border border-slate-700 px-3 py-2 text-white text-base focus:outline-none focus:border-slate-500"
+            className=" bg-slate-900 border border-slate-700 px-3 py-2 text-white text-base focus:outline-none focus:border-slate-500"
           />
         </label>
         <label className="flex flex-col gap-1 text-xs text-slate-400">
@@ -86,7 +86,7 @@ export function IncomeForm() {
             value={firm}
             onChange={(e) => setFirm(e.target.value)}
             placeholder="Source of income"
-            className="rounded-lg bg-slate-900 border border-slate-700 px-3 py-2 text-white text-base focus:outline-none focus:border-slate-500"
+            className=" bg-slate-900 border border-slate-700 px-3 py-2 text-white text-base focus:outline-none focus:border-slate-500"
           />
           <datalist id="firm-list">
             {firms.map((f) => (
@@ -103,7 +103,7 @@ export function IncomeForm() {
             step="1"
             value={accounts}
             onChange={(e) => setAccounts(e.target.value)}
-            className="rounded-lg bg-slate-900 border border-slate-700 px-3 py-2 text-white text-base focus:outline-none focus:border-slate-500"
+            className=" bg-slate-900 border border-slate-700 px-3 py-2 text-white text-base focus:outline-none focus:border-slate-500"
           />
         </label>
         <DateInput value={date} onChange={setDate} />
@@ -113,7 +113,7 @@ export function IncomeForm() {
             type="file"
             accept="image/*,application/pdf"
             onChange={(e) => setReceiptFile(e.target.files?.[0] ?? null)}
-            className="rounded-lg bg-slate-900 border border-slate-700 px-3 py-2 text-slate-300 text-sm file:mr-3 file:rounded-md file:border-0 file:bg-slate-700 file:text-slate-200 file:px-3 file:py-1.5 file:text-xs file:font-medium"
+            className=" bg-slate-900 border border-slate-700 px-3 py-2 text-slate-300 text-sm file:mr-3 file: file:border-0 file:bg-slate-700 file:text-slate-200 file:px-3 file:py-1.5 file:text-xs file:font-medium"
           />
           {receiptFile && <span className="text-slate-500 truncate">{receiptFile.name}</span>}
         </label>
@@ -125,13 +125,13 @@ export function IncomeForm() {
 
       <button
         type="submit"
-        className="rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold py-2.5 transition-colors"
+        className=" bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold py-2.5 transition-colors"
       >
         Log income
       </button>
 
       {justLogged && (
-        <div className="flex items-center justify-between rounded-lg bg-slate-900 border border-slate-700 px-3 py-2 text-sm">
+        <div className="flex items-center justify-between bg-slate-900 border border-slate-700 px-3 py-2 text-sm">
           <span className="text-slate-300">
             Logged {formatCurrency(justLogged.amount * justLogged.accounts)} · {justLogged.firm}
           </span>

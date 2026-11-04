@@ -12,6 +12,7 @@ import { SummaryView } from "../../components/SummaryView";
 import { TaxesView } from "../../components/TaxesView";
 import { MigrationPrompt } from "../../components/MigrationPrompt";
 import { FullScreenMessage } from "../../routes/guards";
+import { useDocumentTitle } from "../../hooks/useDocumentTitle";
 
 // The original single page ledger, moved here unchanged when routing was added.
 function LedgerContent() {
@@ -43,6 +44,7 @@ function LedgerContent() {
 }
 
 export function LedgerPage() {
+  useDocumentTitle("app.nav.ledger");
   const { user } = useAuth();
   const userId = user!.id;
   const repository = useMemo(() => createSupabaseRepository(userId), [userId]);

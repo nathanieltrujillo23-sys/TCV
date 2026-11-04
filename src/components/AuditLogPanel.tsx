@@ -37,7 +37,7 @@ export function AuditLogPanel() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="text-xs px-2.5 py-1.5 rounded-md bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 border border-slate-700"
+        className="text-xs px-2.5 py-1.5 bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 border border-slate-700"
       >
         Activity
       </button>

@@ -92,7 +92,7 @@ export function ContactPage() {
 
       {sentTo ? (
         <div className="bg-card border border-line border-l-4 border-l-accent p-6" role="status">
-          <h2 className="font-display text-2xl font-semibold text-ink">{t("contact.success.title")}</h2>
+          <h2 className="text-2xl font-semibold tracking-tight text-ink">{t("contact.success.title")}</h2>
           <p className="mt-2 text-ink-soft">{t("contact.success.body", { email: sentTo })}</p>
           <button
             type="button"

@@ -98,7 +98,7 @@ export function ImportPanel() {
       <button
         type="button"
         onClick={openPanel}
-        className="text-xs px-2.5 py-1.5 rounded-md bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 border border-slate-700"
+        className="text-xs px-2.5 py-1.5 bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 border border-slate-700"
       >
         Import
       </button>
@@ -128,7 +128,7 @@ export function ImportPanel() {
               onDragLeave={() => setIsDragging(false)}
               onDrop={handleDrop}
               onClick={() => !isExtracting && fileInputRef.current?.click()}
-              className={`rounded-lg border-2 border-dashed px-4 py-6 text-center text-sm transition-colors ${
+              className={` border-2 border-dashed px-4 py-6 text-center text-sm transition-colors ${
                 isExtracting ? "cursor-wait" : "cursor-pointer"
               } ${
                 isDragging ? "border-emerald-400 bg-emerald-400/5 text-emerald-300" : "border-slate-700 text-slate-400 hover:border-slate-500"
@@ -159,11 +159,11 @@ export function ImportPanel() {
                   : "150, 3, Apex Prop Firm, 2026-08-01\n75, 1, FTMO"
               }
               rows={6}
-              className="rounded-lg bg-slate-900 border border-slate-700 px-3 py-2 text-white text-sm font-mono focus:outline-none focus:border-slate-500"
+              className=" bg-slate-900 border border-slate-700 px-3 py-2 text-white text-sm font-mono focus:outline-none focus:border-slate-500"
             />
 
             {text.trim().length > 0 && (
-              <div className="rounded-lg bg-slate-900 border border-slate-700 p-3 text-sm">
+              <div className=" bg-slate-900 border border-slate-700 p-3 text-sm">
                 <p className="text-slate-300 mb-2">
                   Detected <span className="font-semibold text-white">{rows.length}</span> transaction
                   {rows.length === 1 ? "" : "s"}
@@ -222,7 +222,7 @@ export function ImportPanel() {
                 type="button"
                 disabled={rows.length === 0}
                 onClick={handleImport}
-                className="rounded-lg bg-emerald-500 hover:bg-emerald-400 disabled:opacity-40 disabled:hover:bg-emerald-500 text-slate-950 font-semibold px-4 py-2 text-sm"
+                className=" bg-emerald-500 hover:bg-emerald-400 disabled:opacity-40 disabled:hover:bg-emerald-500 text-slate-950 font-semibold px-4 py-2 text-sm"
               >
                 Import {rows.length > 0 ? rows.length : ""}
               </button>

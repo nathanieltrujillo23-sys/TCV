@@ -19,12 +19,12 @@ export function AboutPage() {
       <PageHeader titleKey="about.title" leadKey="about.lead" />
 
       <section className="py-6">
-        <h2 className="font-display text-2xl font-semibold text-ink">{t("about.story.title")}</h2>
+        <h2 className="text-2xl font-semibold tracking-tight text-ink">{t("about.story.title")}</h2>
         <p className="mt-4 text-ink-soft leading-relaxed text-[17px]">{t("about.story.body")}</p>
       </section>
 
       <section className="py-10 border-t border-line mt-6">
-        <h2 className="font-display text-2xl font-semibold text-ink">{t("about.founder.title")}</h2>
+        <h2 className="text-2xl font-semibold tracking-tight text-ink">{t("about.founder.title")}</h2>
         <p className="mt-1 text-accent font-medium">{t("about.founder.name")}</p>
         <p className="mt-4 text-ink-soft leading-relaxed text-[17px]">{t("about.founder.p1")}</p>
         <p className="mt-4 text-ink-soft leading-relaxed text-[17px]">{t("about.founder.p2")}</p>
@@ -41,11 +41,11 @@ export function AboutPage() {
       </section>
 
       <section className="py-10 border-t border-line">
-        <h2 className="font-display text-2xl font-semibold text-ink">{t("about.values.title")}</h2>
+        <h2 className="text-2xl font-semibold tracking-tight text-ink">{t("about.values.title")}</h2>
         <div className="mt-6 flex flex-col gap-6">
           {VALUES.map((v) => (
             <div key={v.titleKey}>
-              <h3 className="font-display text-lg font-semibold text-ink">{t(v.titleKey)}</h3>
+              <h3 className="text-lg font-semibold tracking-tight text-ink">{t(v.titleKey)}</h3>
               <p className="mt-1 text-ink-soft leading-relaxed">{t(v.bodyKey)}</p>
             </div>
           ))}

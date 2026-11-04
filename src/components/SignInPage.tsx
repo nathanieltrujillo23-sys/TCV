@@ -1,7 +1,11 @@
 import { useState, type FormEvent } from "react";
+import { Link } from "react-router-dom";
 import { useAuth } from "../state/AuthContext";
+import { useT } from "../i18n/LanguageContext";
+import { BrandMark } from "./site/SiteUI";
 
 export function SignInPage({ initialMode = "signin" }: { initialMode?: "signin" | "signup" }) {
+  const t = useT();
   const { signIn, signUp } = useAuth();
   const [mode, setMode] = useState<"signin" | "signup">(initialMode);
   const [email, setEmail] = useState("");
@@ -34,7 +38,7 @@ export function SignInPage({ initialMode = "signin" }: { initialMode?: "signin" 
       if (error) {
         setError(error);
       } else if (needsConfirmation) {
-        setNotice("Account created — check your email to confirm it, then sign in.");
+        setNotice(t("auth.confirmEmail"));
         setMode("signin");
         setPassword("");
       }
@@ -43,78 +47,88 @@ export function SignInPage({ initialMode = "signin" }: { initialMode?: "signin" 
     }
   }
 
+  const input =
+    "w-full bg-paper border border-line px-3 py-2.5 text-ink text-base focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent";
+  const tab = (active: boolean) =>
+    `flex-1 py-2.5 text-sm font-medium border-b-2 transition-colors ${
+      active ? "border-accent text-ink" : "border-transparent text-ink-soft hover:text-ink"
+    }`;
+
   return (
-    <div className="min-h-screen bg-slate-900 flex items-center justify-center px-4 py-10">
+    <div className="min-h-screen bg-surface text-ink font-sans [color-scheme:light] flex items-center justify-center px-4 py-10">
       <div className="w-full max-w-sm flex flex-col gap-6">
-        <div className="text-center">
-          <h1 className="text-white font-bold text-2xl">TRUCAPITALVENTURES</h1>
-          <p className="text-slate-400 text-sm mt-1">Sign in to your ledger</p>
+        <div className="flex flex-col items-center gap-3 text-center">
+          <Link to="/">
+            <BrandMark />
+          </Link>
+          <p className="text-ink-soft text-sm">{t("auth.subtitle")}</p>
         </div>
 
-        <div className="rounded-xl bg-slate-800 border border-slate-700 p-4">
-          <div className="flex gap-1 mb-4 rounded-lg bg-slate-900 p-1">
-            <button
-              type="button"
-              onClick={() => switchMode("signin")}
-              className={`flex-1 py-1.5 text-sm font-medium rounded-md transition-colors ${
-                mode === "signin" ? "bg-slate-100 text-slate-900" : "text-slate-400 hover:text-white"
-              }`}
-            >
-              Sign in
+        <div className="bg-paper border border-line border-t-2 border-t-ink">
+          <div className="flex border-b border-line px-4">
+            <button type="button" onClick={() => switchMode("signin")} className={tab(mode === "signin")}>
+              {t("auth.tab.signIn")}
             </button>
-            <button
-              type="button"
-              onClick={() => switchMode("signup")}
-              className={`flex-1 py-1.5 text-sm font-medium rounded-md transition-colors ${
-                mode === "signup" ? "bg-slate-100 text-slate-900" : "text-slate-400 hover:text-white"
-              }`}
-            >
-              Create account
+            <button type="button" onClick={() => switchMode("signup")} className={tab(mode === "signup")}>
+              {t("auth.tab.signUp")}
             </button>
           </div>
 
-          <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@example.com"
-              required
-              className="rounded-lg bg-slate-900 border border-slate-700 px-3 py-2 text-white text-sm focus:outline-none focus:border-slate-500"
-            />
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Password"
-              required
-              minLength={6}
-              className="rounded-lg bg-slate-900 border border-slate-700 px-3 py-2 text-white text-sm focus:outline-none focus:border-slate-500"
-            />
-            {mode === "signup" && (
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4 p-5">
+            <label className="flex flex-col gap-1.5 text-sm font-medium">
+              {t("auth.email")}
               <input
-                type="text"
-                value={businessName}
-                onChange={(e) => setBusinessName(e.target.value)}
-                placeholder="Business name (optional)"
-                className="rounded-lg bg-slate-900 border border-slate-700 px-3 py-2 text-white text-sm focus:outline-none focus:border-slate-500"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder={t("auth.emailPlaceholder")}
+                autoComplete="email"
+                required
+                className={input}
               />
+            </label>
+            <label className="flex flex-col gap-1.5 text-sm font-medium">
+              {t("auth.password")}
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                autoComplete={mode === "signin" ? "current-password" : "new-password"}
+                required
+                minLength={6}
+                className={input}
+              />
+            </label>
+            {mode === "signup" && (
+              <label className="flex flex-col gap-1.5 text-sm font-medium">
+                {t("auth.businessName")}
+                <input type="text" value={businessName} onChange={(e) => setBusinessName(e.target.value)} className={input} />
+              </label>
             )}
             <button
               type="submit"
               disabled={busy}
-              className="rounded-lg bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 text-slate-950 font-semibold py-2.5 text-sm"
+              className="bg-accent hover:bg-accent-dark disabled:opacity-60 text-white font-medium py-2.5 text-sm"
             >
-              {busy ? "Working…" : mode === "signin" ? "Sign in" : "Create account"}
+              {busy ? t("auth.working") : t(mode === "signin" ? "auth.submit.signIn" : "auth.submit.signUp")}
             </button>
-            {error && <p className="text-rose-400 text-xs">{error}</p>}
-            {notice && <p className="text-emerald-400 text-xs">{notice}</p>}
+            {error && (
+              <p className="text-red-700 text-sm" role="alert">
+                {error}
+              </p>
+            )}
+            {notice && (
+              <p className="text-accent text-sm" role="status">
+                {notice}
+              </p>
+            )}
           </form>
         </div>
 
-        <p className="text-slate-600 text-xs text-center leading-relaxed">
-          Your data lives in your own account and syncs across every device you sign into.
-        </p>
+        <p className="text-ink-soft text-xs text-center leading-relaxed">{t("auth.footer")}</p>
+        <Link to="/" className="text-center text-sm text-accent hover:text-accent-dark underline underline-offset-4">
+          {t("auth.backHome")}
+        </Link>
       </div>
     </div>
   );

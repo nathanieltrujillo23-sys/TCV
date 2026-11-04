@@ -46,20 +46,20 @@ export function AveragesCard() {
   }
 
   return (
-    <div className="rounded-2xl bg-slate-800 p-4 flex flex-col gap-4">
+    <div className=" bg-slate-800 p-4 flex flex-col gap-4">
       <div className="flex items-center justify-between gap-2 flex-wrap">
         <h2 className="text-slate-200 font-semibold text-sm">Averages</h2>
         <Segmented options={GRANULARITY_OPTIONS} value={granularity} onChange={changeGranularity} />
       </div>
 
       <div className="grid grid-cols-2 gap-2">
-        <div className="rounded-xl bg-slate-900 border border-slate-700 px-3 py-2.5">
+        <div className=" bg-slate-900 border border-slate-700 px-3 py-2.5">
           <p className="text-slate-500 text-[11px] uppercase tracking-wide">
             Avg {granularity === "week" ? "weekly" : "monthly"} income
           </p>
           <p className="text-lg font-semibold mt-0.5 text-emerald-400">{formatCurrency(averages.avgIncome)}</p>
         </div>
-        <div className="rounded-xl bg-slate-900 border border-slate-700 px-3 py-2.5">
+        <div className=" bg-slate-900 border border-slate-700 px-3 py-2.5">
           <p className="text-slate-500 text-[11px] uppercase tracking-wide">
             Avg {granularity === "week" ? "weekly" : "monthly"} expenses
           </p>
@@ -72,7 +72,7 @@ export function AveragesCard() {
           type="button"
           onClick={() => shiftBrowse(-1)}
           aria-label={`Previous ${granularity}`}
-          className="w-7 h-7 flex items-center justify-center rounded-md bg-slate-900 text-slate-300 hover:text-white hover:bg-slate-700 text-sm shrink-0"
+          className="w-7 h-7 flex items-center justify-center bg-slate-900 text-slate-300 hover:text-white hover:bg-slate-700 text-sm shrink-0"
         >
           ‹
         </button>
@@ -88,7 +88,7 @@ export function AveragesCard() {
           type="button"
           onClick={() => shiftBrowse(1)}
           aria-label={`Next ${granularity}`}
-          className="w-7 h-7 flex items-center justify-center rounded-md bg-slate-900 text-slate-300 hover:text-white hover:bg-slate-700 text-sm shrink-0"
+          className="w-7 h-7 flex items-center justify-center bg-slate-900 text-slate-300 hover:text-white hover:bg-slate-700 text-sm shrink-0"
         >
           ›
         </button>

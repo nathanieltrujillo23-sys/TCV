@@ -17,14 +17,14 @@ export function LegalPage({ titleKey, introKey, sections }: { titleKey: StringKe
         </p>
       </div>
       <header className="pt-6 pb-8">
-        <h1 className="font-display text-4xl font-semibold text-ink">{t(titleKey)}</h1>
+        <h1 className="text-4xl font-semibold tracking-tight text-ink">{t(titleKey)}</h1>
         <p className="mt-2 text-sm text-ink-soft">{t("legal.updated")}</p>
         {introKey && <p className="mt-5 text-ink-soft leading-relaxed text-[17px]">{t(introKey)}</p>}
       </header>
       <div className="flex flex-col gap-8">
         {sections.map((s) => (
           <section key={s.titleKey}>
-            <h2 className="font-display text-xl font-semibold text-ink">{t(s.titleKey)}</h2>
+            <h2 className="text-xl font-semibold tracking-tight text-ink">{t(s.titleKey)}</h2>
             <p className="mt-2 text-ink-soft leading-relaxed">{t(s.bodyKey)}</p>
           </section>
         ))}

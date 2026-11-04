@@ -61,7 +61,7 @@ export function MessagesPage() {
         <p className="text-slate-400 text-sm mt-1">{t("app.messages.lead")}</p>
       </div>
 
-      <div className="inline-flex self-start rounded-lg bg-slate-800 p-1 gap-1" role="tablist" aria-label={t("app.messages.filterLabel")}>
+      <div className="inline-flex self-start bg-slate-800 p-1 gap-1" role="tablist" aria-label={t("app.messages.filterLabel")}>
         {FILTERS.map((f) => (
           <button
             key={f.status}
@@ -69,7 +69,7 @@ export function MessagesPage() {
             role="tab"
             aria-selected={filter === f.status}
             onClick={() => setFilter(f.status)}
-            className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
+            className={`px-3 py-1.5 text-sm font-medium transition-colors ${
               filter === f.status ? "bg-slate-100 text-slate-900" : "text-slate-300 hover:text-white hover:bg-slate-700"
             }`}
           >
@@ -85,11 +85,11 @@ export function MessagesPage() {
       ) : messages === null ? (
         <p className="text-slate-400 text-sm">{t("common.loading")}</p>
       ) : visible.length === 0 ? (
-        <p className="text-slate-400 text-sm rounded-xl border border-dashed border-slate-700 p-6 text-center">{t(active.emptyKey)}</p>
+        <p className="text-slate-400 text-sm border border-dashed border-slate-700 p-6 text-center">{t(active.emptyKey)}</p>
       ) : (
         <ul className="flex flex-col gap-3">
           {visible.map((m) => (
-            <li key={m.id} className="rounded-xl bg-slate-800 border border-slate-700 p-4 flex flex-col gap-3">
+            <li key={m.id} className=" bg-slate-800 border border-slate-700 p-4 flex flex-col gap-3">
               <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
                 <p className="text-white font-medium">{m.name}</p>
                 <a href={`mailto:${m.email}`} className="text-sm text-emerald-400 hover:text-emerald-300 break-all">{m.email}</a>
@@ -100,21 +100,21 @@ export function MessagesPage() {
               <div className="flex flex-wrap gap-2 pt-1">
                 <a
                   href={`mailto:${m.email}`}
-                  className="rounded-md bg-slate-100 text-slate-900 text-xs font-medium px-3 py-1.5 hover:bg-white"
+                  className=" bg-slate-100 text-slate-900 text-xs font-medium px-3 py-1.5 hover:bg-white"
                 >
                   {t("app.messages.reply")}
                 </a>
                 {m.status === "new" && (
-                  <button type="button" onClick={() => move(m.id, "read")} className="rounded-md border border-slate-600 text-slate-200 text-xs font-medium px-3 py-1.5 hover:bg-slate-700">
+                  <button type="button" onClick={() => move(m.id, "read")} className=" border border-slate-600 text-slate-200 text-xs font-medium px-3 py-1.5 hover:bg-slate-700">
                     {t("app.messages.markRead")}
                   </button>
                 )}
                 {m.status !== "archived" ? (
-                  <button type="button" onClick={() => move(m.id, "archived")} className="rounded-md border border-slate-600 text-slate-200 text-xs font-medium px-3 py-1.5 hover:bg-slate-700">
+                  <button type="button" onClick={() => move(m.id, "archived")} className=" border border-slate-600 text-slate-200 text-xs font-medium px-3 py-1.5 hover:bg-slate-700">
                     {t("app.messages.archive")}
                   </button>
                 ) : (
-                  <button type="button" onClick={() => move(m.id, "read")} className="rounded-md border border-slate-600 text-slate-200 text-xs font-medium px-3 py-1.5 hover:bg-slate-700">
+                  <button type="button" onClick={() => move(m.id, "read")} className=" border border-slate-600 text-slate-200 text-xs font-medium px-3 py-1.5 hover:bg-slate-700">
                     {t("app.messages.restore")}
                   </button>
                 )}

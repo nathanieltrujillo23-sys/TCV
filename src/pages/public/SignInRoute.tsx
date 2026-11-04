@@ -5,6 +5,7 @@ import { useT } from "../../i18n/LanguageContext";
 import { SignInPage } from "../../components/SignInPage";
 import { FullScreenMessage } from "../../routes/guards";
 import { homePathFor } from "../../routes/homePath";
+import { useDocumentTitle } from "../../hooks/useDocumentTitle";
 
 /** /signin and /signup. Once signed in, goes back to where the visitor was headed, or to their home area. */
 export function SignInRoute({ mode }: { mode: "signin" | "signup" }) {
@@ -12,6 +13,7 @@ export function SignInRoute({ mode }: { mode: "signin" | "signup" }) {
   const { user } = useAuth();
   const { loading, isStaff } = useProfile();
   const location = useLocation();
+  useDocumentTitle(mode === "signin" ? "auth.tab.signIn" : "auth.tab.signUp");
 
   if (loading) return <FullScreenMessage>{t("common.loading")}</FullScreenMessage>;
   if (user) {

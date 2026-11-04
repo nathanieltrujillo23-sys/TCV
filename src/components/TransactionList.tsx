@@ -19,7 +19,7 @@ export function TransactionList({ type }: { type: "income" | "expense" }) {
 
   if (filtered.length === 0) {
     return (
-      <div className="rounded-2xl bg-slate-800 p-4">
+      <div className=" bg-slate-800 p-4">
         <div className="flex items-baseline justify-between gap-2 mb-1">
           <h2 className="text-slate-200 font-semibold text-sm">Entries</h2>
           <span className="text-slate-500 text-xs">{effectiveLabel}</span>
@@ -30,7 +30,7 @@ export function TransactionList({ type }: { type: "income" | "expense" }) {
   }
 
   return (
-    <div className="rounded-2xl bg-slate-800 p-4">
+    <div className=" bg-slate-800 p-4">
       <div className="flex items-baseline justify-between gap-2 mb-2">
         <h2 className="text-slate-200 font-semibold text-sm">Entries ({filtered.length})</h2>
         <span className="text-slate-500 text-xs">{effectiveLabel}</span>

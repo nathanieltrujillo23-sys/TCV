@@ -48,7 +48,7 @@ export function SearchPanel() {
       <button
         type="button"
         onClick={openPanel}
-        className="text-xs px-2.5 py-1.5 rounded-md bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 border border-slate-700"
+        className="text-xs px-2.5 py-1.5 bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 border border-slate-700"
       >
         Search
       </button>
@@ -61,7 +61,7 @@ export function SearchPanel() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search by item, vendor, category, amount, date…"
-              className="rounded-lg bg-slate-900 border border-slate-700 px-3 py-2 text-white text-sm focus:outline-none focus:border-slate-500"
+              className=" bg-slate-900 border border-slate-700 px-3 py-2 text-white text-sm focus:outline-none focus:border-slate-500"
             />
 
             {query.trim() === "" ? (

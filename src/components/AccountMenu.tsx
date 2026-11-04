@@ -37,7 +37,7 @@ export function AccountMenu() {
       <button
         type="button"
         onClick={openMenu}
-        className="text-xs px-2.5 py-1.5 rounded-md bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 border border-slate-700 truncate max-w-[160px]"
+        className="text-xs px-2.5 py-1.5 bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 border border-slate-700 truncate max-w-[160px]"
       >
         {user?.email ?? "Account"}
       </button>
@@ -63,21 +63,21 @@ export function AccountMenu() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Business name"
-                  className="rounded-lg bg-slate-900 border border-slate-700 px-3 py-2 text-white text-sm focus:outline-none focus:border-slate-500"
+                  className=" bg-slate-900 border border-slate-700 px-3 py-2 text-white text-sm focus:outline-none focus:border-slate-500"
                 />
                 {error && <p className="text-rose-400 text-xs">{error}</p>}
                 <div className="flex items-center gap-2">
                   <button
                     type="button"
                     onClick={() => setEditing(false)}
-                    className="flex-1 rounded-lg bg-slate-900 border border-slate-700 text-slate-300 text-sm font-medium py-2 hover:text-white"
+                    className="flex-1 bg-slate-900 border border-slate-700 text-slate-300 text-sm font-medium py-2 hover:text-white"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={busy}
-                    className="flex-1 rounded-lg bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 text-slate-950 text-sm font-medium py-2"
+                    className="flex-1 bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 text-slate-950 text-sm font-medium py-2"
                   >
                     {busy ? "Saving…" : "Save"}
                   </button>
@@ -87,7 +87,7 @@ export function AccountMenu() {
               <button
                 type="button"
                 onClick={startEdit}
-                className="rounded-lg bg-slate-900 border border-slate-700 text-slate-300 text-sm font-medium py-2.5 hover:text-white hover:bg-slate-700"
+                className=" bg-slate-900 border border-slate-700 text-slate-300 text-sm font-medium py-2.5 hover:text-white hover:bg-slate-700"
               >
                 Edit business name
               </button>
@@ -96,7 +96,7 @@ export function AccountMenu() {
             <button
               type="button"
               onClick={signOut}
-              className="rounded-lg bg-slate-100 text-slate-900 text-sm font-medium py-2.5 hover:bg-white"
+              className=" bg-slate-100 text-slate-900 text-sm font-medium py-2.5 hover:bg-white"
             >
               Sign out
             </button>

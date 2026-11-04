@@ -25,7 +25,7 @@ function NumberField({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder="0.00"
-        className="rounded-lg bg-slate-900 border border-slate-700 px-3 py-2 text-white text-base focus:outline-none focus:border-slate-500"
+        className=" bg-slate-900 border border-slate-700 px-3 py-2 text-white text-base focus:outline-none focus:border-slate-500"
       />
       {hint && <span className="text-slate-500">{hint}</span>}
     </label>
@@ -79,7 +79,7 @@ export function TaxesView() {
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-5 flex flex-col gap-4">
-      <div className="rounded-2xl bg-amber-500/10 border border-amber-500/30 p-4">
+      <div className=" bg-amber-500/10 border border-amber-500/30 p-4">
         <p className="text-amber-200 text-sm font-medium">Planning estimate only — not tax advice</p>
         <p className="text-amber-200/80 text-xs mt-1">
           Assumes a single filer with a single-member LLC taxed as a sole proprietorship (Schedule C), using {TAX_YEAR}{" "}
@@ -89,7 +89,7 @@ export function TaxesView() {
         </p>
       </div>
 
-      <div className="rounded-2xl bg-slate-800 p-4 flex flex-col gap-3">
+      <div className=" bg-slate-800 p-4 flex flex-col gap-3">
         <div className="flex items-center justify-between gap-2">
           <h2 className="text-slate-200 font-semibold text-sm">LLC business profit</h2>
           <label className="flex items-center gap-2 text-xs text-slate-400 shrink-0">
@@ -101,7 +101,7 @@ export function TaxesView() {
                 setYear(parseInt(e.target.value, 10) || year);
                 setLlcProfitOverride(null);
               }}
-              className="w-20 rounded-md bg-slate-900 border border-slate-700 px-2 py-1 text-white text-sm"
+              className="w-20 bg-slate-900 border border-slate-700 px-2 py-1 text-white text-sm"
             />
           </label>
         </div>
@@ -117,7 +117,7 @@ export function TaxesView() {
         />
       </div>
 
-      <div className="rounded-2xl bg-slate-800 p-4 flex flex-col gap-3">
+      <div className=" bg-slate-800 p-4 flex flex-col gap-3">
         <h2 className="text-slate-200 font-semibold text-sm">Other work income</h2>
         <div className="grid grid-cols-2 gap-3">
           <NumberField label="W-2 wages (gross)" value={workIncome} onChange={setWorkIncome} />
@@ -130,7 +130,7 @@ export function TaxesView() {
         </div>
       </div>
 
-      <div className="rounded-2xl bg-slate-800 p-4 flex flex-col gap-3">
+      <div className=" bg-slate-800 p-4 flex flex-col gap-3">
         <h2 className="text-slate-200 font-semibold text-sm">Non-taxable income</h2>
         <p className="text-slate-500 text-xs">
           Tips are deductible up to $25,000 under the One Big Beautiful Bill's "no tax on tips" provision (2025–2028,
@@ -143,7 +143,7 @@ export function TaxesView() {
         </div>
       </div>
 
-      <div className="rounded-2xl bg-slate-800 p-4">
+      <div className=" bg-slate-800 p-4">
         <h2 className="text-slate-200 font-semibold text-sm mb-2">Estimate</h2>
         <div className="divide-y divide-slate-700">
           <ResultRow label="Total income" value={formatCurrency(result.totalIncome)} />

@@ -134,7 +134,7 @@ export function TransactionEditRow({ transaction, onDone }: { transaction: Trans
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
             placeholder="Amount"
-            className="rounded-md bg-slate-900 border border-slate-700 px-2 py-1.5 text-white text-sm"
+            className=" bg-slate-900 border border-slate-700 px-2 py-1.5 text-white text-sm"
           />
           {t.type === "expense" ? (
             <>
@@ -144,7 +144,7 @@ export function TransactionEditRow({ transaction, onDone }: { transaction: Trans
                 value={item}
                 onChange={(e) => setItem(e.target.value)}
                 placeholder="Item"
-                className="rounded-md bg-slate-900 border border-slate-700 px-2 py-1.5 text-white text-sm"
+                className=" bg-slate-900 border border-slate-700 px-2 py-1.5 text-white text-sm"
               />
               <datalist id="edit-item-list">
                 {itemOptions.map((i) => (
@@ -160,7 +160,7 @@ export function TransactionEditRow({ transaction, onDone }: { transaction: Trans
               value={accounts}
               onChange={(e) => setAccounts(e.target.value)}
               placeholder="Accounts"
-              className="rounded-md bg-slate-900 border border-slate-700 px-2 py-1.5 text-white text-sm"
+              className=" bg-slate-900 border border-slate-700 px-2 py-1.5 text-white text-sm"
             />
           )}
           <input
@@ -169,7 +169,7 @@ export function TransactionEditRow({ transaction, onDone }: { transaction: Trans
             value={vendor}
             onChange={(e) => setVendor(e.target.value)}
             placeholder={t.type === "expense" ? "Vendor" : "Firm"}
-            className="rounded-md bg-slate-900 border border-slate-700 px-2 py-1.5 text-white text-sm"
+            className=" bg-slate-900 border border-slate-700 px-2 py-1.5 text-white text-sm"
           />
           <datalist id="edit-vendor-list">
             {vendorOptions.map((v) => (
@@ -184,7 +184,7 @@ export function TransactionEditRow({ transaction, onDone }: { transaction: Trans
                 value={accountMethod}
                 onChange={(e) => setAccountMethod(e.target.value)}
                 placeholder="Card / bank"
-                className="rounded-md bg-slate-900 border border-slate-700 px-2 py-1.5 text-white text-sm"
+                className=" bg-slate-900 border border-slate-700 px-2 py-1.5 text-white text-sm"
               />
               <datalist id="edit-card-list">
                 {cardOptions.map((c) => (
@@ -198,7 +198,7 @@ export function TransactionEditRow({ transaction, onDone }: { transaction: Trans
                 value={purchases}
                 onChange={(e) => setPurchases(e.target.value)}
                 placeholder="Purchases"
-                className="rounded-md bg-slate-900 border border-slate-700 px-2 py-1.5 text-white text-sm"
+                className=" bg-slate-900 border border-slate-700 px-2 py-1.5 text-white text-sm"
               />
               <input
                 type="text"
@@ -206,18 +206,18 @@ export function TransactionEditRow({ transaction, onDone }: { transaction: Trans
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
                 placeholder="Category (for taxes)"
-                className="rounded-md bg-slate-900 border border-slate-700 px-2 py-1.5 text-white text-sm"
+                className=" bg-slate-900 border border-slate-700 px-2 py-1.5 text-white text-sm"
               />
               <datalist id="edit-category-list">
                 {categoryOptions.map((c) => (
                   <option key={c} value={c} />
                 ))}
               </datalist>
-              <div className="inline-flex rounded-md bg-slate-900 border border-slate-700 p-1 gap-1 w-fit">
+              <div className="inline-flex bg-slate-900 border border-slate-700 p-1 gap-1 w-fit">
                 <button
                   type="button"
                   onClick={() => setRecurring(true)}
-                  className={`px-2 py-1 text-xs font-medium rounded ${
+                  className={`px-2 py-1 text-xs font-medium ${
                     recurring ? "bg-slate-100 text-slate-900" : "text-slate-400 hover:text-white"
                   }`}
                 >
@@ -226,7 +226,7 @@ export function TransactionEditRow({ transaction, onDone }: { transaction: Trans
                 <button
                   type="button"
                   onClick={() => setRecurring(false)}
-                  className={`px-2 py-1 text-xs font-medium rounded ${
+                  className={`px-2 py-1 text-xs font-medium ${
                     !recurring ? "bg-slate-100 text-slate-900" : "text-slate-400 hover:text-white"
                   }`}
                 >
@@ -234,11 +234,11 @@ export function TransactionEditRow({ transaction, onDone }: { transaction: Trans
                 </button>
               </div>
               {recurring && (
-                <div className="inline-flex rounded-md bg-slate-900 border border-slate-700 p-1 gap-1 w-fit">
+                <div className="inline-flex bg-slate-900 border border-slate-700 p-1 gap-1 w-fit">
                   <button
                     type="button"
                     onClick={() => setRecurringFrequency("weekly")}
-                    className={`px-2 py-1 text-xs font-medium rounded ${
+                    className={`px-2 py-1 text-xs font-medium ${
                       recurringFrequency === "weekly" ? "bg-slate-100 text-slate-900" : "text-slate-400 hover:text-white"
                     }`}
                   >
@@ -247,7 +247,7 @@ export function TransactionEditRow({ transaction, onDone }: { transaction: Trans
                   <button
                     type="button"
                     onClick={() => setRecurringFrequency("monthly")}
-                    className={`px-2 py-1 text-xs font-medium rounded ${
+                    className={`px-2 py-1 text-xs font-medium ${
                       recurringFrequency === "monthly" ? "bg-slate-100 text-slate-900" : "text-slate-400 hover:text-white"
                     }`}
                   >
@@ -295,7 +295,7 @@ export function TransactionEditRow({ transaction, onDone }: { transaction: Trans
           </button>
           <button
             type="submit"
-            className="rounded-md bg-slate-100 text-slate-900 text-xs font-medium px-3 py-1.5 hover:bg-white"
+            className=" bg-slate-100 text-slate-900 text-xs font-medium px-3 py-1.5 hover:bg-white"
           >
             Save
           </button>
@@ -314,14 +314,14 @@ export function TransactionEditRow({ transaction, onDone }: { transaction: Trans
               <button
                 type="button"
                 onClick={dismissBulkCategory}
-                className="flex-1 rounded-lg bg-slate-900 border border-slate-700 text-slate-300 text-sm font-medium py-2 hover:text-white"
+                className="flex-1 bg-slate-900 border border-slate-700 text-slate-300 text-sm font-medium py-2 hover:text-white"
               >
                 Just this one
               </button>
               <button
                 type="button"
                 onClick={applyBulkCategory}
-                className="flex-1 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-sm font-medium py-2"
+                className="flex-1 bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-sm font-medium py-2"
               >
                 Apply to all
               </button>

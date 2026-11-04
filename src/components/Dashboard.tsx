@@ -33,7 +33,7 @@ export function Dashboard() {
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-5">
-      <div className="rounded-2xl bg-slate-800 p-5">
+      <div className=" bg-slate-800 p-5">
         <p className="text-slate-400 text-sm font-medium">{primaryLabel}</p>
         <p
           className={`text-4xl font-bold mt-1 ${

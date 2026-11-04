@@ -24,7 +24,7 @@ function StatTile({
 }) {
   const color = tone === "emerald" ? "text-emerald-400" : tone === "rose" ? "text-rose-400" : "text-slate-100";
   return (
-    <div className="rounded-xl bg-slate-900 border border-slate-700 px-3 py-2.5">
+    <div className=" bg-slate-900 border border-slate-700 px-3 py-2.5">
       <p className="text-slate-500 text-[11px] uppercase tracking-wide">{label}</p>
       <p className={`text-lg font-semibold mt-0.5 ${color}`}>{value}</p>
     </div>
@@ -72,66 +72,66 @@ export function SummaryView() {
 
       <GrowthCard />
 
-      <div id="summary-chart-comparison" className="rounded-2xl bg-slate-800 p-4">
+      <div id="summary-chart-comparison" className=" bg-slate-800 p-4">
         <div className="flex items-center gap-4 mb-2">
           <h2 className="text-slate-200 font-semibold text-sm mr-auto">Income vs expenses</h2>
           <span className="flex items-center gap-1 text-slate-400 text-xs">
-            <span className="w-2 h-2 rounded-full bg-emerald-400" /> Income
+            <span className="w-2 h-2 bg-emerald-400" /> Income
           </span>
           <span className="flex items-center gap-1 text-slate-400 text-xs">
-            <span className="w-2 h-2 rounded-full bg-rose-400" /> Expenses
+            <span className="w-2 h-2 bg-rose-400" /> Expenses
           </span>
         </div>
         <ComparisonTrendChart income={incomeTrend} expense={expenseTrend} />
       </div>
 
-      <div id="summary-chart-net" className="rounded-2xl bg-slate-800 p-4">
+      <div id="summary-chart-net" className=" bg-slate-800 p-4">
         <div className="flex items-center gap-4 mb-2">
           <h2 className="text-slate-200 font-semibold text-sm mr-auto">Net per period</h2>
           {netForecast.length > 0 && (
             <span className="flex items-center gap-1 text-slate-400 text-xs">
-              <span className="w-2.5 h-2.5 rounded-sm border border-dashed border-slate-400" /> Forecast
+              <span className="w-2.5 h-2.5 border border-dashed border-slate-400" /> Forecast
             </span>
           )}
         </div>
         <ForecastChart actual={netTrend} forecast={netForecast} />
       </div>
 
-      <div id="summary-chart-margin" className="rounded-2xl bg-slate-800 p-4">
+      <div id="summary-chart-margin" className=" bg-slate-800 p-4">
         <h2 className="text-slate-200 font-semibold text-sm mb-2">Net margin trend</h2>
         <MarginTrendChart points={marginTrendData} />
       </div>
 
-      <div id="summary-chart-cumulative" className="rounded-2xl bg-slate-800 p-4">
+      <div id="summary-chart-cumulative" className=" bg-slate-800 p-4">
         <h2 className="text-slate-200 font-semibold text-sm mb-2">Cumulative net</h2>
         <CumulativeChart points={cumulativeNet} />
       </div>
 
-      <div id="summary-chart-count" className="rounded-2xl bg-slate-800 p-4">
+      <div id="summary-chart-count" className=" bg-slate-800 p-4">
         <div className="flex items-center gap-4 mb-2">
           <h2 className="text-slate-200 font-semibold text-sm mr-auto">Transaction count</h2>
           <span className="flex items-center gap-1 text-slate-400 text-xs">
-            <span className="w-2 h-2 rounded-full bg-emerald-400" /> Income
+            <span className="w-2 h-2 bg-emerald-400" /> Income
           </span>
           <span className="flex items-center gap-1 text-slate-400 text-xs">
-            <span className="w-2 h-2 rounded-full bg-rose-400" /> Expenses
+            <span className="w-2 h-2 bg-rose-400" /> Expenses
           </span>
         </div>
         <TransactionCountChart income={incomeCountTrend} expense={expenseCountTrend} />
       </div>
 
-      <div id="summary-chart-pie" className="rounded-2xl bg-slate-800 p-4">
+      <div id="summary-chart-pie" className=" bg-slate-800 p-4">
         <h2 className="text-slate-200 font-semibold text-sm mb-3">Where expenses went</h2>
         <PieChart items={expenseBreakdown} />
       </div>
 
-      <div id="summary-chart-category" className="rounded-2xl bg-slate-800 p-4">
+      <div id="summary-chart-category" className=" bg-slate-800 p-4">
         <h2 className="text-slate-200 font-semibold text-sm mb-3">Expenses by category</h2>
         <PieChart items={categoryBreakdown} />
       </div>
 
       <div className="grid sm:grid-cols-2 gap-4">
-        <div className="rounded-2xl bg-slate-800 p-4">
+        <div className=" bg-slate-800 p-4">
           <h2 className="text-slate-200 font-semibold text-sm mb-2">Top expense vendors</h2>
           <BreakdownList
             items={expenseBreakdown}
@@ -139,7 +139,7 @@ export function SummaryView() {
             onSelect={(label) => setSelected({ type: "expense", label })}
           />
         </div>
-        <div className="rounded-2xl bg-slate-800 p-4">
+        <div className=" bg-slate-800 p-4">
           <h2 className="text-slate-200 font-semibold text-sm mb-2">Top income sources</h2>
           <BreakdownList
             items={incomeBreakdown}

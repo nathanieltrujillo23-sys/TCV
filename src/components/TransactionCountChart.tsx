@@ -32,7 +32,6 @@ export function TransactionCountChart({ income, expense }: { income: TrendPoint[
                 y={chartHeight - incH}
                 width={barWidth}
                 height={Math.max(incH, p.value > 0 ? 2 : 0)}
-                rx={2}
                 fill="#34d399"
                 opacity={p.value === 0 ? 0.15 : inGroup ? 1 : 0.5}
               />
@@ -41,7 +40,6 @@ export function TransactionCountChart({ income, expense }: { income: TrendPoint[
                 y={chartHeight - expH}
                 width={barWidth}
                 height={Math.max(expH, ev > 0 ? 2 : 0)}
-                rx={2}
                 fill="#fb7185"
                 opacity={ev === 0 ? 0.15 : inGroup ? 1 : 0.5}
               />

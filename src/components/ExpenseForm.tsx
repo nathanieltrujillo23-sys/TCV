@@ -156,7 +156,7 @@ export function ExpenseForm() {
   const total = (parseFloat(price) || 0) * (parseInt(purchases, 10) || 1);
 
   return (
-    <form onSubmit={handleSubmit} className="rounded-2xl bg-slate-800 p-4 flex flex-col gap-3">
+    <form onSubmit={handleSubmit} className=" bg-slate-800 p-4 flex flex-col gap-3">
       <h2 className="text-slate-200 font-semibold text-sm">Log expense</h2>
 
       <div className="grid grid-cols-2 gap-3">
@@ -170,7 +170,7 @@ export function ExpenseForm() {
             value={price}
             onChange={(e) => setPrice(e.target.value)}
             placeholder="0.00"
-            className="rounded-lg bg-slate-900 border border-slate-700 px-3 py-2 text-white text-base focus:outline-none focus:border-slate-500"
+            className=" bg-slate-900 border border-slate-700 px-3 py-2 text-white text-base focus:outline-none focus:border-slate-500"
           />
         </label>
         <label className="flex flex-col gap-1 text-xs text-slate-400">
@@ -182,7 +182,7 @@ export function ExpenseForm() {
             step="1"
             value={purchases}
             onChange={(e) => setPurchases(e.target.value)}
-            className="rounded-lg bg-slate-900 border border-slate-700 px-3 py-2 text-white text-base focus:outline-none focus:border-slate-500"
+            className=" bg-slate-900 border border-slate-700 px-3 py-2 text-white text-base focus:outline-none focus:border-slate-500"
           />
         </label>
         <label className="flex flex-col gap-1 text-xs text-slate-400">
@@ -194,7 +194,7 @@ export function ExpenseForm() {
             value={item}
             onChange={(e) => setItem(e.target.value)}
             placeholder="e.g. Coffee"
-            className="rounded-lg bg-slate-900 border border-slate-700 px-3 py-2 text-white text-base focus:outline-none focus:border-slate-500"
+            className=" bg-slate-900 border border-slate-700 px-3 py-2 text-white text-base focus:outline-none focus:border-slate-500"
           />
           <datalist id="item-list">
             {items.map((i) => (
@@ -210,7 +210,7 @@ export function ExpenseForm() {
             value={vendor}
             onChange={(e) => setVendor(e.target.value)}
             placeholder="Vendor"
-            className="rounded-lg bg-slate-900 border border-slate-700 px-3 py-2 text-white text-base focus:outline-none focus:border-slate-500"
+            className=" bg-slate-900 border border-slate-700 px-3 py-2 text-white text-base focus:outline-none focus:border-slate-500"
           />
           <datalist id="vendor-list">
             {vendors.map((v) => (
@@ -226,7 +226,7 @@ export function ExpenseForm() {
             value={accountMethod}
             onChange={(e) => setAccountMethod(e.target.value)}
             placeholder="e.g. Chase Visa"
-            className="rounded-lg bg-slate-900 border border-slate-700 px-3 py-2 text-white text-base focus:outline-none focus:border-slate-500"
+            className=" bg-slate-900 border border-slate-700 px-3 py-2 text-white text-base focus:outline-none focus:border-slate-500"
           />
           <datalist id="card-list">
             {cards.map((c) => (
@@ -242,7 +242,7 @@ export function ExpenseForm() {
             value={category}
             onChange={(e) => setCategory(e.target.value)}
             placeholder="e.g. Office Supplies"
-            className="rounded-lg bg-slate-900 border border-slate-700 px-3 py-2 text-white text-base focus:outline-none focus:border-slate-500"
+            className=" bg-slate-900 border border-slate-700 px-3 py-2 text-white text-base focus:outline-none focus:border-slate-500"
           />
           <datalist id="category-list">
             {categories.map((c) => (
@@ -253,11 +253,11 @@ export function ExpenseForm() {
         <DateInput value={date} onChange={setDate} />
         <div className="flex flex-col gap-1 text-xs text-slate-400">
           Recurring expense?
-          <div className="inline-flex rounded-lg bg-slate-900 border border-slate-700 p-1 gap-1 w-fit">
+          <div className="inline-flex bg-slate-900 border border-slate-700 p-1 gap-1 w-fit">
             <button
               type="button"
               onClick={() => setRecurring(true)}
-              className={`px-3 py-1 text-sm font-medium rounded-md transition-colors ${
+              className={`px-3 py-1 text-sm font-medium transition-colors ${
                 recurring ? "bg-slate-100 text-slate-900" : "text-slate-400 hover:text-white"
               }`}
             >
@@ -266,7 +266,7 @@ export function ExpenseForm() {
             <button
               type="button"
               onClick={() => setRecurring(false)}
-              className={`px-3 py-1 text-sm font-medium rounded-md transition-colors ${
+              className={`px-3 py-1 text-sm font-medium transition-colors ${
                 !recurring ? "bg-slate-100 text-slate-900" : "text-slate-400 hover:text-white"
               }`}
             >
@@ -278,11 +278,11 @@ export function ExpenseForm() {
           <>
             <div className="flex flex-col gap-1 text-xs text-slate-400">
               Frequency
-              <div className="inline-flex rounded-lg bg-slate-900 border border-slate-700 p-1 gap-1 w-fit">
+              <div className="inline-flex bg-slate-900 border border-slate-700 p-1 gap-1 w-fit">
                 <button
                   type="button"
                   onClick={() => setRecurringFrequency("weekly")}
-                  className={`px-3 py-1 text-sm font-medium rounded-md transition-colors ${
+                  className={`px-3 py-1 text-sm font-medium transition-colors ${
                     recurringFrequency === "weekly" ? "bg-slate-100 text-slate-900" : "text-slate-400 hover:text-white"
                   }`}
                 >
@@ -291,7 +291,7 @@ export function ExpenseForm() {
                 <button
                   type="button"
                   onClick={() => setRecurringFrequency("monthly")}
-                  className={`px-3 py-1 text-sm font-medium rounded-md transition-colors ${
+                  className={`px-3 py-1 text-sm font-medium transition-colors ${
                     recurringFrequency === "monthly" ? "bg-slate-100 text-slate-900" : "text-slate-400 hover:text-white"
                   }`}
                 >
@@ -307,7 +307,7 @@ export function ExpenseForm() {
                 min={date}
                 value={recurringEndDate}
                 onChange={(e) => setRecurringEndDate(e.target.value)}
-                className="rounded-lg bg-slate-900 border border-slate-700 px-3 py-2 text-white text-base focus:outline-none focus:border-slate-500"
+                className=" bg-slate-900 border border-slate-700 px-3 py-2 text-white text-base focus:outline-none focus:border-slate-500"
               />
             </label>
           </>
@@ -318,7 +318,7 @@ export function ExpenseForm() {
             type="file"
             accept="image/*,application/pdf"
             onChange={(e) => setReceiptFile(e.target.files?.[0] ?? null)}
-            className="rounded-lg bg-slate-900 border border-slate-700 px-3 py-2 text-slate-300 text-sm file:mr-3 file:rounded-md file:border-0 file:bg-slate-700 file:text-slate-200 file:px-3 file:py-1.5 file:text-xs file:font-medium"
+            className=" bg-slate-900 border border-slate-700 px-3 py-2 text-slate-300 text-sm file:mr-3 file: file:border-0 file:bg-slate-700 file:text-slate-200 file:px-3 file:py-1.5 file:text-xs file:font-medium"
           />
           {receiptFile && <span className="text-slate-500 truncate">{receiptFile.name}</span>}
         </label>
@@ -330,13 +330,13 @@ export function ExpenseForm() {
 
       <button
         type="submit"
-        className="rounded-lg bg-rose-500 hover:bg-rose-400 text-white font-semibold py-2.5 transition-colors"
+        className=" bg-rose-500 hover:bg-rose-400 text-white font-semibold py-2.5 transition-colors"
       >
         Log expense
       </button>
 
       {justLogged && (
-        <div className="flex items-center justify-between rounded-lg bg-slate-900 border border-slate-700 px-3 py-2 text-sm">
+        <div className="flex items-center justify-between bg-slate-900 border border-slate-700 px-3 py-2 text-sm">
           <span className="text-slate-300">
             Logged {formatCurrency(justLogged.price * justLogged.purchases)} · {justLogged.item}
           </span>
@@ -371,14 +371,14 @@ export function ExpenseForm() {
               <button
                 type="button"
                 onClick={dismissSeries}
-                className="flex-1 rounded-lg bg-slate-900 border border-slate-700 text-slate-300 text-sm font-medium py-2 hover:text-white"
+                className="flex-1 bg-slate-900 border border-slate-700 text-slate-300 text-sm font-medium py-2 hover:text-white"
               >
                 No thanks
               </button>
               <button
                 type="button"
                 onClick={confirmSeries}
-                className="flex-1 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-sm font-medium py-2"
+                className="flex-1 bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-sm font-medium py-2"
               >
                 Log them
               </button>

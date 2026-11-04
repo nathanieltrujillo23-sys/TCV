@@ -83,7 +83,7 @@ export function ExportPdfButton() {
         disabled={exporting}
         aria-label="Export summary as PDF"
         title="Export summary as PDF"
-        className="w-7 h-7 flex items-center justify-center rounded-md bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 text-sm disabled:opacity-50"
+        className="w-7 h-7 flex items-center justify-center bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 text-sm disabled:opacity-50"
       >
         {exporting ? (
           <span className="w-3 h-3 border-2 border-slate-400 border-t-transparent rounded-full animate-spin" />

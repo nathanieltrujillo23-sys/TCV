@@ -18,7 +18,7 @@ export function ChartTooltip({ x, y, children }: { x: number; y: number; childre
   return (
     <div
       ref={ref}
-      className={`pointer-events-none absolute z-10 -translate-y-1/2 rounded-md bg-slate-950 border border-slate-700 px-2 py-1 text-xs text-white whitespace-nowrap shadow-lg ${
+      className={`pointer-events-none absolute z-10 -translate-y-1/2 bg-slate-950 border border-slate-700 px-2 py-1 text-xs text-white whitespace-nowrap shadow-lg ${
         side === "left" ? "-translate-x-full" : ""
       }`}
       style={{ left: side === "left" ? x - 8 : x + 8, top: y }}

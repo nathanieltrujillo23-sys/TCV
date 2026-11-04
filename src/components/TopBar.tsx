@@ -23,12 +23,12 @@ function ViewModeToggle() {
   const { primaryView, setPrimaryView, viewMode, setViewMode } = useLedger();
 
   const tab = (active: boolean) =>
-    `px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
+    `px-3 py-1.5 text-sm font-medium transition-colors ${
       active ? "bg-slate-100 text-slate-900" : "text-slate-300 hover:text-white hover:bg-slate-700"
     }`;
 
   return (
-    <div className="inline-flex rounded-lg bg-slate-800 p-1 gap-1">
+    <div className="inline-flex bg-slate-800 p-1 gap-1">
       <button
         type="button"
         onClick={() => {
@@ -78,7 +78,7 @@ function PeriodControls() {
         <button
           type="button"
           onClick={() => setPickerOpen(true)}
-          className="px-3 py-1.5 text-sm font-medium rounded-md bg-slate-100 text-slate-900"
+          className="px-3 py-1.5 text-sm font-medium bg-slate-100 text-slate-900"
         >
           {rangeLabel(customRange)}
         </button>
@@ -86,7 +86,7 @@ function PeriodControls() {
           type="button"
           onClick={() => setCustomRange(null)}
           aria-label="Clear custom range"
-          className="w-7 h-7 flex items-center justify-center rounded-md bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 text-sm"
+          className="w-7 h-7 flex items-center justify-center bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 text-sm"
         >
           ✕
         </button>
@@ -110,7 +110,7 @@ function PeriodControls() {
         type="button"
         onClick={() => shiftPeriod(-1)}
         aria-label={`Previous ${period}`}
-        className="w-7 h-7 flex items-center justify-center rounded-md bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 text-sm"
+        className="w-7 h-7 flex items-center justify-center bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 text-sm"
       >
         ‹
       </button>
@@ -119,7 +119,7 @@ function PeriodControls() {
         type="button"
         onClick={() => shiftPeriod(1)}
         aria-label={`Next ${period}`}
-        className="w-7 h-7 flex items-center justify-center rounded-md bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 text-sm"
+        className="w-7 h-7 flex items-center justify-center bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 text-sm"
       >
         ›
       </button>
@@ -128,7 +128,7 @@ function PeriodControls() {
         onClick={() => setPickerOpen(true)}
         aria-label="Custom date range"
         title="Custom date range"
-        className="w-7 h-7 flex items-center justify-center rounded-md bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 text-sm"
+        className="w-7 h-7 flex items-center justify-center bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 text-sm"
       >
         📅
       </button>

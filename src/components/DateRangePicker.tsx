@@ -40,7 +40,7 @@ export function DateRangePicker({
             value={start}
             max={end}
             onChange={(e) => setStart(e.target.value)}
-            className="rounded-lg bg-slate-900 border border-slate-700 px-3 py-2 text-slate-100"
+            className=" bg-slate-900 border border-slate-700 px-3 py-2 text-slate-100"
           />
         </label>
         <label className="flex flex-col gap-1 text-sm">
@@ -50,13 +50,13 @@ export function DateRangePicker({
             value={end}
             min={start}
             onChange={(e) => setEnd(e.target.value)}
-            className="rounded-lg bg-slate-900 border border-slate-700 px-3 py-2 text-slate-100"
+            className=" bg-slate-900 border border-slate-700 px-3 py-2 text-slate-100"
           />
         </label>
         <button
           type="button"
           onClick={apply}
-          className="rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold py-2 text-sm"
+          className=" bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold py-2 text-sm"
         >
           Apply range
         </button>

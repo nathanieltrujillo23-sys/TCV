@@ -71,7 +71,7 @@ export function PieChart({ items }: { items: BreakdownItem[] }) {
             style={{ opacity: hover === null || hover === i ? 1 : 0.5 }}
           >
             <span
-              className="w-2.5 h-2.5 rounded-full shrink-0"
+              className="w-2.5 h-2.5 shrink-0"
               style={{ background: SLICE_COLORS[i % SLICE_COLORS.length] }}
             />
             <span className="text-slate-300 truncate">{item.label}</span>

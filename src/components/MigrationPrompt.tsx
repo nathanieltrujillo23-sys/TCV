@@ -50,7 +50,7 @@ export function MigrationPrompt() {
             return (
               <li
                 key={c.accountId}
-                className="flex items-center justify-between gap-3 rounded-lg bg-slate-900 border border-slate-700 px-3 py-2"
+                className="flex items-center justify-between gap-3 bg-slate-900 border border-slate-700 px-3 py-2"
               >
                 <div className="min-w-0">
                   <p className="text-slate-100 text-sm font-medium truncate">{c.accountName}</p>
@@ -63,7 +63,7 @@ export function MigrationPrompt() {
                     type="button"
                     onClick={() => handleImport(c)}
                     disabled={importingId === c.accountId}
-                    className="shrink-0 rounded-md bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 text-slate-950 text-xs font-medium px-3 py-1.5"
+                    className="shrink-0 bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 text-slate-950 text-xs font-medium px-3 py-1.5"
                   >
                     {importingId === c.accountId ? "Importing…" : "Import"}
                   </button>

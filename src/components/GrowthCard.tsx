@@ -14,7 +14,7 @@ function GrowthTile({ label, value, invert = false }: { label: string; value: nu
   const arrow = value === null ? "" : positive ? "▲ " : "▼ ";
 
   return (
-    <div className="rounded-xl bg-slate-900 border border-slate-700 px-3 py-2.5">
+    <div className=" bg-slate-900 border border-slate-700 px-3 py-2.5">
       <p className="text-slate-500 text-[11px] uppercase tracking-wide">{label}</p>
       <p className={`text-lg font-semibold mt-0.5 ${color}`}>{value === null ? "New" : `${arrow}${Math.abs(value).toFixed(0)}%`}</p>
     </div>
@@ -27,7 +27,7 @@ export function GrowthCard() {
 
   if (rows.length < 2) {
     return (
-      <div className="rounded-2xl bg-slate-800 p-4">
+      <div className=" bg-slate-800 p-4">
         <h2 className="text-slate-200 font-semibold text-sm mb-2">Month-over-month growth</h2>
         <p className="text-slate-500 text-xs">Need at least two months of activity to compare.</p>
       </div>
@@ -38,7 +38,7 @@ export function GrowthCard() {
   const prev = rows[rows.length - 2];
 
   return (
-    <div className="rounded-2xl bg-slate-800 p-4">
+    <div className=" bg-slate-800 p-4">
       <div className="flex items-baseline justify-between gap-2 mb-3">
         <h2 className="text-slate-200 font-semibold text-sm">Month-over-month growth</h2>
         <span className="text-slate-500 text-xs truncate">

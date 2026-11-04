@@ -1,18 +1,38 @@
 @import "tailwindcss";
-@import "@fontsource-variable/inter";
-@import "@fontsource-variable/source-serif-4";
+@import "@fontsource-variable/ibm-plex-sans";
+@import "@fontsource/ibm-plex-mono/400.css";
+@import "@fontsource/ibm-plex-mono/500.css";
 
-/* Public site palette and type. The private app keeps Tailwind's slate theme. */
 @theme {
-  --font-display: "Source Serif 4 Variable", Georgia, "Times New Roman", serif;
-  --font-body: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
-  --color-ink: #0b1f3a;
-  --color-ink-soft: #3d4b5f;
-  --color-paper: #f8f7f4;
+  /* One type family everywhere: Plex Sans for text, Plex Mono for figures. */
+  --font-sans: "IBM Plex Sans Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --font-display: var(--font-sans);
+  --font-body: var(--font-sans);
+
+  /* Public site and client portal: navy, white, steel gray, one cobalt accent. */
+  --color-ink: #0a1a33;
+  --color-ink-soft: #4a5568;
+  --color-paper: #ffffff;
+  --color-surface: #f3f5f8;
   --color-card: #ffffff;
-  --color-line: #e4e1d9;
-  --color-accent: #0f766e;
-  --color-accent-dark: #115e59;
+  --color-line: #dce1e8;
+  --color-accent: #1f4fd8;
+  --color-accent-dark: #173eaa;
+
+  /* Owner area and ledger: the "slate" scale is re-tinted toward navy so the
+     whole private app reads as one dark terminal palette without renaming classes. */
+  --color-slate-50: #f5f7fa;
+  --color-slate-100: #e9edf3;
+  --color-slate-200: #cfd6e2;
+  --color-slate-300: #aab5c7;
+  --color-slate-400: #8090a8;
+  --color-slate-500: #586780;
+  --color-slate-600: #3a4964;
+  --color-slate-700: #26334c;
+  --color-slate-800: #141f35;
+  --color-slate-900: #0b1426;
+  --color-slate-950: #060c19;
 }
 
 :root {
@@ -21,5 +41,7 @@
 
 body {
   margin: 0;
-  background: #0f172a;
+  background: #0b1426;
+  /* Same-width digits so money columns line up. */
+  font-variant-numeric: tabular-nums;
 }

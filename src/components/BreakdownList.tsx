@@ -31,9 +31,9 @@ export function BreakdownList({
                 {formatCurrency(item.value)} · {item.percent.toFixed(0)}%
               </span>
             </div>
-            <div className="h-1.5 rounded-full bg-slate-900 overflow-hidden">
+            <div className="h-1.5 bg-slate-900 overflow-hidden">
               <div
-                className={`h-full rounded-full ${barColor}`}
+                className={`h-full ${barColor}`}
                 style={{ width: `${max === 0 ? 0 : (item.value / max) * 100}%` }}
               />
             </div>
@@ -46,7 +46,7 @@ export function BreakdownList({
               <button
                 type="button"
                 onClick={() => onSelect(item.label)}
-                className="flex flex-col gap-1 w-full text-left rounded-md -mx-1 px-1 py-0.5 hover:bg-slate-700/50 transition-colors"
+                className="flex flex-col gap-1 w-full text-left -mx-1 px-1 py-0.5 hover:bg-slate-700/50 transition-colors"
               >
                 {content}
               </button>

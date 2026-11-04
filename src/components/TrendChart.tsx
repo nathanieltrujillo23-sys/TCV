@@ -36,11 +36,10 @@ export function TrendChart({ points, color }: { points: TrendPoint[]; color: "em
                 y={y}
                 width={barWidth}
                 height={Math.max(barHeight, p.value > 0 ? 2 : 0)}
-                rx={2}
                 fill={barColor}
                 opacity={p.value === 0 ? 0.15 : hover === null || hover === i ? 1 : 0.5}
               />
-              {p.value === 0 && <rect x={x} y={chartHeight - 2} width={barWidth} height={2} rx={1} fill={barColor} opacity={0.15} />}
+              {p.value === 0 && <rect x={x} y={chartHeight - 2} width={barWidth} height={2} fill={barColor} opacity={0.15} />}
               {i % labelEvery === 0 && (
                 <text x={x + barWidth / 2} y={chartHeight + 14} fontSize={9} textAnchor="middle" fill="#64748b">
                   {p.label}

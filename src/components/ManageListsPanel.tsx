@@ -44,7 +44,7 @@ export function ManageListsPanel() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="text-xs px-2.5 py-1.5 rounded-md bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 border border-slate-700"
+        className="text-xs px-2.5 py-1.5 bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 border border-slate-700"
       >
         Lists
       </button>
@@ -54,7 +54,7 @@ export function ManageListsPanel() {
           <div className="flex flex-col gap-3">
             <Segmented options={CATEGORY_OPTIONS} value={category} onChange={setCategory} />
 
-            <ul className="flex flex-col divide-y divide-slate-700 max-h-64 overflow-y-auto rounded-lg border border-slate-700">
+            <ul className="flex flex-col divide-y divide-slate-700 max-h-64 overflow-y-auto border border-slate-700">
               {items.length === 0 && <li className="text-slate-500 text-xs px-3 py-3">No entries yet.</li>}
               {items.map((item) => (
                 <li key={item.id} className="flex items-center justify-between gap-2 px-3 py-2">
@@ -68,7 +68,7 @@ export function ManageListsPanel() {
                         if (e.key === "Enter") commitEdit();
                         if (e.key === "Escape") setEditingId(null);
                       }}
-                      className="flex-1 rounded-md bg-slate-900 border border-slate-600 px-2 py-1 text-sm text-white"
+                      className="flex-1 bg-slate-900 border border-slate-600 px-2 py-1 text-sm text-white"
                     />
                   ) : (
                     <button
@@ -97,12 +97,12 @@ export function ManageListsPanel() {
                 onChange={(e) => setNewName(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleAdd()}
                 placeholder="Add new…"
-                className="flex-1 rounded-md bg-slate-900 border border-slate-700 px-3 py-2 text-sm text-white focus:outline-none focus:border-slate-500"
+                className="flex-1 bg-slate-900 border border-slate-700 px-3 py-2 text-sm text-white focus:outline-none focus:border-slate-500"
               />
               <button
                 type="button"
                 onClick={handleAdd}
-                className="rounded-md bg-slate-100 text-slate-900 text-sm font-medium px-3 py-2 hover:bg-white"
+                className=" bg-slate-100 text-slate-900 text-sm font-medium px-3 py-2 hover:bg-white"
               >
                 Add
               </button>

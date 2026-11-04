@@ -3,13 +3,22 @@ import { Link } from "react-router-dom";
 import { useT } from "../../i18n/LanguageContext";
 import type { StringKey } from "../../i18n/en";
 
-/** Text logo with a thin accent rule underneath. */
-export function BrandMark() {
+/** Square "TCV" monogram beside the wordmark. `tone="dark"` is for the navy owner area. */
+export function BrandMark({ tone = "light" }: { tone?: "light" | "dark" }) {
   const t = useT();
   return (
-    <span className="inline-flex flex-col gap-1">
-      <span className="font-display text-lg font-semibold tracking-tight text-ink leading-none">{t("brand.name")}</span>
-      <span className="h-0.5 w-8 bg-accent" aria-hidden="true" />
+    <span className="inline-flex items-center gap-2.5">
+      <span
+        aria-hidden="true"
+        className={`inline-flex h-7 w-7 items-center justify-center font-mono text-[10px] font-medium tracking-wider ${
+          tone === "dark" ? "bg-accent text-white" : "bg-ink text-white"
+        }`}
+      >
+        TCV
+      </span>
+      <span className={`text-[15px] font-semibold tracking-tight leading-none ${tone === "dark" ? "text-white" : "text-ink"}`}>
+        {t("brand.name")}
+      </span>
     </span>
   );
 }
@@ -23,7 +32,7 @@ export function PageHeader({ eyebrowKey, titleKey, leadKey }: { eyebrowKey?: Str
   return (
     <header className="pt-14 pb-10 sm:pt-20 sm:pb-12">
       {eyebrowKey && <p className="text-accent text-sm font-medium tracking-wide mb-3">{t(eyebrowKey)}</p>}
-      <h1 className="font-display text-4xl sm:text-5xl font-semibold text-ink leading-tight">{t(titleKey)}</h1>
+      <h1 className="text-4xl sm:text-5xl font-semibold tracking-tight text-ink leading-tight">{t(titleKey)}</h1>
       {leadKey && <p className="mt-5 text-lg text-ink-soft leading-relaxed max-w-2xl">{t(leadKey)}</p>}
     </header>
   );
@@ -31,7 +40,7 @@ export function PageHeader({ eyebrowKey, titleKey, leadKey }: { eyebrowKey?: Str
 
 export function SectionTitle({ titleKey }: { titleKey: StringKey }) {
   const t = useT();
-  return <h2 className="font-display text-2xl sm:text-3xl font-semibold text-ink mb-6">{t(titleKey)}</h2>;
+  return <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight text-ink mb-6">{t(titleKey)}</h2>;
 }
 
 export function ButtonLink({ to, variant = "primary", children }: { to: string; variant?: "primary" | "secondary"; children: ReactNode }) {
@@ -50,8 +59,8 @@ export function ButtonLink({ to, variant = "primary", children }: { to: string; 
 export function InfoCard({ titleKey, bodyKey, children }: { titleKey: StringKey; bodyKey: StringKey; children?: ReactNode }) {
   const t = useT();
   return (
-    <div className="bg-card border border-line p-6 flex flex-col gap-2">
-      <h3 className="font-display text-xl font-semibold text-ink">{t(titleKey)}</h3>
+    <div className="bg-card border border-line border-t-2 border-t-ink p-6 flex flex-col gap-2">
+      <h3 className="text-lg font-semibold tracking-tight text-ink">{t(titleKey)}</h3>
       <p className="text-ink-soft leading-relaxed text-[15px]">{t(bodyKey)}</p>
       {children}
     </div>

@@ -17,8 +17,8 @@ export function LearnPage() {
       <div className="grid gap-5 md:grid-cols-2">
         {LESSONS.map((l) => (
           <article key={l.titleKey} className="bg-card border border-line p-6 flex flex-col gap-3">
-            <p className="text-xs font-medium uppercase tracking-wider text-accent">{t("learn.sample")}</p>
-            <h2 className="font-display text-2xl font-semibold text-ink">{t(l.titleKey)}</h2>
+            <p className="font-mono text-xs uppercase tracking-[0.18em] text-accent">{t("learn.sample")}</p>
+            <h2 className="text-2xl font-semibold tracking-tight text-ink">{t(l.titleKey)}</h2>
             <p className="text-ink-soft leading-relaxed">{t(l.bodyKey)}</p>
             <p className="mt-auto pt-3 text-sm text-ink-soft border-t border-line">{t("learn.comingSoon")}</p>
           </article>

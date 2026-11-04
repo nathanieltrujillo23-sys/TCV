@@ -8,7 +8,7 @@ export function Modal({ title, onClose, children }: { title: string; onClose: ()
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className="w-full sm:max-w-lg max-h-[85vh] overflow-y-auto rounded-t-2xl sm:rounded-2xl bg-slate-800 border border-slate-700 p-4">
+      <div className="w-full sm:max-w-lg max-h-[85vh] overflow-y-auto sm: bg-slate-800 border border-slate-700 p-4">
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-slate-100 font-semibold">{title}</h2>
           <button type="button" onClick={onClose} className="text-slate-400 hover:text-white text-sm">

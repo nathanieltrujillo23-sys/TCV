@@ -1,0 +1,15 @@
+export const auth = {
+  "auth.subtitle": "Sign in to your account",
+  "auth.tab.signIn": "Sign in",
+  "auth.tab.signUp": "Create account",
+  "auth.email": "Email",
+  "auth.emailPlaceholder": "you@example.com",
+  "auth.password": "Password",
+  "auth.businessName": "Business name (optional)",
+  "auth.submit.signIn": "Sign in",
+  "auth.submit.signUp": "Create account",
+  "auth.working": "Working…",
+  "auth.confirmEmail": "Account created. Check your email to confirm it, then sign in.",
+  "auth.footer": "Your data lives in your own account and syncs across every device you sign into.",
+  "auth.backHome": "Back to the website",
+} as const;

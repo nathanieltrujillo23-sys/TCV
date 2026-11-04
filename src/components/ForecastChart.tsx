@@ -53,7 +53,6 @@ export function ForecastChart({ actual, forecast }: { actual: TrendPoint[]; fore
                 y={y}
                 width={barWidth}
                 height={Math.max(h, p.value !== 0 ? 2 : 0)}
-                rx={2}
                 fill={color}
                 opacity={p.value === 0 ? 0.15 : isForecast ? 0.35 : hover === null || hover === i ? 1 : 0.5}
                 stroke={isForecast ? color : "none"}
