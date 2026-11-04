@@ -70,11 +70,11 @@ export function SignInPage({ initialMode = "signin" }: { initialMode?: "signin" 
   return (
     <div className="min-h-screen bg-surface text-ink font-sans [color-scheme:light] flex items-center justify-center px-4 py-10">
       <div className="w-full max-w-sm flex flex-col gap-6">
-        <div className="flex flex-col items-center gap-3 text-center">
-          <Link to="/">
-            <BrandMark />
+        <div className="flex flex-col items-center gap-4 text-center">
+          <Link to="/" className="py-2">
+            <BrandMark size="lg" />
           </Link>
-          <h1 className="text-ink-soft text-sm font-normal">{t(mode === "signin" ? "auth.subtitle" : "auth.subtitleSignUp")}</h1>
+          <h1 className="text-ink-soft text-[15px] font-normal">{t(mode === "signin" ? "auth.subtitle" : "auth.subtitleSignUp")}</h1>
         </div>
 
         <div className="bg-paper border border-line border-t-2 border-t-ink">

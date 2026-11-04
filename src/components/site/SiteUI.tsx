@@ -4,19 +4,36 @@ import { useT } from "../../i18n/LanguageContext";
 import type { StringKey } from "../../i18n/en";
 
 /** Square "TCV" monogram beside the wordmark. `tone="dark"` is for the navy owner area. */
-export function BrandMark({ tone = "light" }: { tone?: "light" | "dark" }) {
-  const t = useT();
+/**
+ * The TCV mark: geometric initials over a cobalt rule. Same drawing as
+ * public/favicon.svg. On the dark owner area the square turns cobalt and the
+ * rule white, so it still stands out against navy.
+ */
+export function LogoMark({ tone = "light", className = "" }: { tone?: "light" | "dark"; className?: string }) {
   return (
-    <span className="inline-flex items-center gap-2.5">
+    <svg viewBox="0 0 32 32" aria-hidden="true" className={`shrink-0 ${className}`}>
+      <rect width="32" height="32" fill={tone === "dark" ? "#1f4fd8" : "#0a1a33"} />
+      <g fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="butt" strokeLinejoin="miter">
+        <path d="M3.5 9.6h7.4M7.2 9.6v11.4" />
+        <path d="M19 9.6h-5.6v10.3h5.6" />
+        <path d="M21.2 8.8l3.6 12.2l3.6-12.2" />
+      </g>
+      <rect x="3.5" y="24" width="25" height="1.8" fill={tone === "dark" ? "#fff" : "#1f4fd8"} />
+    </svg>
+  );
+}
+
+export function BrandMark({ tone = "light", size = "md" }: { tone?: "light" | "dark"; size?: "md" | "lg" }) {
+  const t = useT();
+  const large = size === "lg";
+  return (
+    <span className={`inline-flex items-center ${large ? "gap-3.5" : "gap-2.5"}`}>
+      <LogoMark tone={tone} className={large ? "h-12 w-12 sm:h-14 sm:w-14" : "h-7 w-7"} />
       <span
-        aria-hidden="true"
-        className={`inline-flex h-7 w-7 items-center justify-center font-mono text-[10px] font-medium tracking-wider ${
-          tone === "dark" ? "bg-accent text-white" : "bg-ink text-white"
+        className={`font-semibold tracking-tight leading-none ${large ? "text-2xl sm:text-[28px]" : "text-[15px]"} ${
+          tone === "dark" ? "text-white" : "text-ink"
         }`}
       >
-        TCV
-      </span>
-      <span className={`text-[15px] font-semibold tracking-tight leading-none ${tone === "dark" ? "text-white" : "text-ink"}`}>
         {t("brand.name")}
       </span>
     </span>
