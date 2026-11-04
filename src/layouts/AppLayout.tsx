@@ -49,6 +49,16 @@ export function AppLayout() {
                 {t(item.key)}
               </NavLink>
             ))}
+            <Link to="/portal" className="md:hidden shrink-0 rounded-md px-3 py-2 text-sm text-slate-400 hover:text-white">
+              {t("app.nav.portal")}
+            </Link>
+            <button
+              type="button"
+              onClick={signOut}
+              className="md:hidden shrink-0 rounded-md px-3 py-2 text-sm text-slate-400 hover:text-white"
+            >
+              {t("common.signOut")}
+            </button>
           </nav>
           <div className="hidden md:flex md:flex-col gap-1 mt-4 pt-4 border-t border-slate-800">
             <Link to="/portal" className="rounded-md px-3 py-2 text-sm text-slate-400 hover:text-white hover:bg-slate-800">
