@@ -203,6 +203,30 @@ for (const account of [TRADER, BUSINESS]) {
   }
 }
 
+// 4. Planning workbooks: each account sees and changes only its own.
+{
+  const owner = await signIn(CLIENT);
+  const other = await signIn(TRADER);
+  const mine = { version: 1, note: "rls-check" };
+  const ins = await owner.client.from("planning_workbooks").upsert({ data: mine }, { onConflict: "user_id" });
+  check("client saves its own workbook", !ins.error, ins.error?.message ?? "saved");
+
+  const { data: seen } = await other.client.from("planning_workbooks").select("user_id");
+  check("another client cannot see it", (seen ?? []).every((r) => r.user_id === other.uid), `${seen?.length} rows`);
+  const forged = await other.client.from("planning_workbooks").insert({ user_id: owner.uid, data: { forged: true } });
+  check("another client cannot write it", refused(forged.error), forged.error ? forged.error.message : "INSERTED");
+  await other.client.from("planning_workbooks").update({ data: { overwritten: true } }).eq("user_id", owner.uid);
+  const { data: still } = await admin.from("planning_workbooks").select("data").eq("user_id", owner.uid).single();
+  check("another client cannot overwrite it", still?.data?.note === "rls-check", JSON.stringify(still?.data));
+
+  const { data: anon, error: anonError } = await visitor.from("planning_workbooks").select("*");
+  check("visitor reads planning_workbooks", refused(anonError) || (anon ?? []).length === 0, anonError ? anonError.message : `${anon.length} rows`);
+  const bad = await owner.client.from("planning_workbooks").upsert({ data: [1, 2] }, { onConflict: "user_id" });
+  check("workbook must be an object", !!bad.error, bad.error ? bad.error.message : "SAVED");
+
+  await admin.from("planning_workbooks").delete().in("user_id", [owner.uid, other.uid]);
+}
+
 const after = await countAll();
 check("no rows changed in any owner table", JSON.stringify(before) === JSON.stringify(after), JSON.stringify(after));
 

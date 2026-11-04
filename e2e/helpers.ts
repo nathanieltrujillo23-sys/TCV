@@ -11,6 +11,7 @@ export const PUBLIC_PATHS = [
   "/services",
   "/learn",
   "/learn/budgeting-cash-flow",
+  "/planning",
   "/contact",
   "/disclosures",
   "/privacy",

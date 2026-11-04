@@ -42,7 +42,7 @@ test("client pages fit a 375 px phone", async ({ page }) => {
     await test.step("/portal (disclaimer)", () => expectNoSidewaysScroll(page));
     await accept.click();
   }
-  for (const path of ["/portal", "/portal/lessons/budgeting-cash-flow", "/portal/lessons/compound-growth", "/portal/tools", "/portal/account"]) {
+  for (const path of ["/portal", "/portal/workbook", "/portal/lessons/budgeting-cash-flow", "/portal/lessons/compound-growth", "/portal/tools", "/portal/account"]) {
     await page.goto(path);
     await expect(page.locator("h1").first()).toBeVisible();
     await test.step(path, () => expectNoSidewaysScroll(page));

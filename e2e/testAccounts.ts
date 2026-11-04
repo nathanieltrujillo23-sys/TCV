@@ -45,5 +45,6 @@ export async function cleanUp(admin: SupabaseClient) {
   const client = await userId(admin, CLIENT_EMAIL);
   await admin.from("trades").delete().eq("user_id", staff).eq("notes", E2E_NOTE);
   await admin.from("lesson_progress").delete().eq("user_id", client);
+  await admin.from("planning_workbooks").delete().in("user_id", [staff, client]);
   await admin.from("profiles").update({ disclaimer_accepted_at: null }).eq("id", client);
 }
