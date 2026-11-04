@@ -11,6 +11,8 @@ export function PortalHome() {
   useDocumentTitle("portal.home.title");
   const { progress, error } = usePortalProgress();
 
+  // Until progress arrives, show "Loading" instead of a misleading 0 of 8.
+  const loading = progress === null && !error;
   const done = LESSONS.filter((l) => progress?.has(l.id)).length;
   const next = LESSONS.find((l) => !progress?.has(l.id));
 
@@ -27,9 +29,11 @@ export function PortalHome() {
         <section className="bg-paper border border-line p-5 flex flex-col gap-3" aria-label={t("portal.progress.title")}>
           <div className="flex items-baseline justify-between gap-3">
             <h2 className="text-sm font-semibold text-ink">{t("portal.progress.title")}</h2>
-            <p className="font-mono text-xs text-ink-soft">{t("portal.progress.count", { done, total: LESSONS.length })}</p>
+            <p className="font-mono text-xs text-ink-soft">
+              {loading ? t("common.loading") : t("portal.progress.count", { done, total: LESSONS.length })}
+            </p>
           </div>
-          <div className="grid grid-cols-8 gap-1" role="progressbar" aria-valuemin={0} aria-valuemax={LESSONS.length} aria-valuenow={done}>
+          <div className="grid grid-cols-8 gap-1" role="progressbar" aria-valuemin={0} aria-valuemax={LESSONS.length} aria-valuenow={loading ? undefined : done} aria-busy={loading}>
             {LESSONS.map((l) => (
               <span key={l.id} className={`h-2 ${progress?.has(l.id) ? "bg-accent" : "bg-line"}`} />
             ))}
@@ -39,7 +43,9 @@ export function PortalHome() {
         <div className="grid gap-5 lg:grid-cols-3">
           <section className="lg:col-span-2 bg-ink text-white p-6 flex flex-col gap-3">
             <p className="font-mono text-xs uppercase tracking-[0.18em] text-white/60">{t("portal.next.title")}</p>
-            {next ? (
+            {loading ? (
+              <p className="text-white/80">{t("common.loading")}</p>
+            ) : next ? (
               <>
                 <h2 className="text-2xl font-semibold tracking-tight">
                   <span className="font-mono text-white/60 mr-3">{String(next.number).padStart(2, "0")}</span>

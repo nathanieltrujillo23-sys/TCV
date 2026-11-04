@@ -34,6 +34,8 @@ export function LessonView({
   const [answers, setAnswers] = useState<(number | null)[]>(lesson.quiz.map(() => null));
   const [result, setResult] = useState<QuizResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  // Portal mode only: "Your progress is saved" waits until the save really finished.
+  const [save, setSave] = useState<"saving" | "saved" | "failed" | null>(null);
   const base = mode === "portal" ? "/portal/lessons" : "/learn";
 
   async function check() {
@@ -41,12 +43,19 @@ export function LessonView({
     setError(null);
     const r = scoreQuiz(answers, lesson.quiz.map((q) => q.answer));
     setResult(r);
-    if (r.passed && onPassed) {
-      try {
-        await onPassed(r.score);
-      } catch (err) {
-        setError(t("lesson.saveError", { error: (err as Error).message }));
-      }
+    if (r.passed) await saveResult(r.score);
+  }
+
+  async function saveResult(score: number) {
+    if (!onPassed) return;
+    setSave("saving");
+    setError(null);
+    try {
+      await onPassed(score);
+      setSave("saved");
+    } catch (err) {
+      setSave("failed");
+      setError(t("lesson.saveError", { error: (err as Error).message }));
     }
   }
 
@@ -54,6 +63,7 @@ export function LessonView({
     setAnswers(lesson.quiz.map(() => null));
     setResult(null);
     setError(null);
+    setSave(null);
   }
 
   return (
@@ -180,14 +190,23 @@ export function LessonView({
         {result ? (
           <div className="flex flex-col gap-3 border-t border-line pt-4" role="status">
             <p className="font-mono text-sm text-ink">{t("lesson.result", { correct: result.correct })}</p>
-            <p className="text-sm text-ink-soft">
-              {result.passed ? t(mode === "portal" ? "lesson.passed" : "lesson.passedPublic") : t("lesson.notPassed")}
-            </p>
+            {!(result.passed && save === "failed") && (
+              <p className="text-sm text-ink-soft">
+                {!result.passed
+                  ? t("lesson.notPassed")
+                  : mode === "public"
+                    ? t("lesson.passedPublic")
+                    : t(save === "saved" ? "lesson.passed" : "lesson.saving")}
+              </p>
+            )}
             <div className="flex flex-wrap gap-3">
               {!result.passed && (
                 <button type="button" onClick={retry} className="bg-accent hover:bg-accent-dark text-white text-sm font-medium px-5 py-2.5">{t("lesson.retry")}</button>
               )}
-              {result.passed && mode === "portal" && nextLesson && (
+              {result.passed && save === "failed" && (
+                <button type="button" onClick={() => saveResult(result.score)} className="bg-accent hover:bg-accent-dark text-white text-sm font-medium px-5 py-2.5">{t("lesson.saveRetry")}</button>
+              )}
+              {result.passed && mode === "portal" && save === "saved" && nextLesson && (
                 <Link to={`${base}/${nextLesson.id}`} className="bg-accent hover:bg-accent-dark text-white text-sm font-medium px-5 py-2.5">{t("lesson.next")}</Link>
               )}
               {mode === "public" && (

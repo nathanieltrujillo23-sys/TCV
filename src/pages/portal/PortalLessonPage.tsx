@@ -10,12 +10,12 @@ export function PortalLessonPage() {
   const t = useT();
   const lesson = lessonById(lessonId);
   useDocumentTitle(lesson ? { text: lesson.title } : "lesson.notFound");
-  const { progress, record } = usePortalProgress();
+  const { progress, error, record } = usePortalProgress();
 
   if (!lesson) {
     return (
       <div className="max-w-3xl mx-auto px-5 py-10 flex flex-col gap-3">
-        <p className="text-ink">{t("lesson.notFound")}</p>
+        <h1 className="text-2xl font-semibold tracking-tight text-ink">{t("lesson.notFound")}</h1>
         <Link to="/portal" className="text-accent underline underline-offset-4">{t("lesson.back")}</Link>
       </div>
     );
@@ -23,13 +23,20 @@ export function PortalLessonPage() {
   const next = LESSONS.find((l) => l.number === lesson.number + 1);
 
   return (
-    <LessonView
-      key={lesson.id}
-      lesson={lesson}
-      mode="portal"
-      nextLesson={next}
-      bestScore={progress?.get(lesson.id)?.quizScore ?? null}
-      onPassed={(score) => record(lesson.id, score)}
-    />
+    <>
+      {error && (
+        <p role="alert" className="max-w-3xl mx-auto px-5 pt-6 text-sm text-red-700">
+          {t("portal.loadError", { error })}
+        </p>
+      )}
+      <LessonView
+        key={lesson.id}
+        lesson={lesson}
+        mode="portal"
+        nextLesson={next}
+        bestScore={progress?.get(lesson.id)?.quizScore ?? null}
+        onPassed={(score) => record(lesson.id, score)}
+      />
+    </>
   );
 }

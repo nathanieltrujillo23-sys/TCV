@@ -1,6 +1,8 @@
 export const app = {
   "app.nav.dashboard": "Dashboard",
   "app.nav.ledger": "Ledger",
+  "app.ledger.loading": "Loading your ledger…",
+  "app.ledger.loadError": "Couldn't load your data: {error}",
   "app.nav.journal": "Journal",
   "app.nav.accounts": "Accounts",
   "app.nav.portfolio": "Portfolio",

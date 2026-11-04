@@ -10,6 +10,7 @@ import { DateRangePicker } from "./DateRangePicker";
 import { ExportPdfButton } from "./ExportPdfButton";
 import { SearchPanel } from "./SearchPanel";
 import { rangeLabel } from "../utils/period";
+import { CalendarIcon } from "./Icons";
 import type { Period } from "../types";
 
 const PERIOD_OPTIONS: { value: Period; label: string }[] = [
@@ -130,7 +131,7 @@ function PeriodControls() {
         title="Custom date range"
         className="w-7 h-7 flex items-center justify-center bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 text-sm"
       >
-        📅
+        <CalendarIcon />
       </button>
       {pickerOpen && (
         <DateRangePicker

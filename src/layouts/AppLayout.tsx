@@ -28,7 +28,7 @@ function navClass({ isActive }: { isActive: boolean }) {
   }`;
 }
 
-/** Owner and admin area: sidebar on wide screens, a scrollable strip on phones. */
+/** Owner and admin area: sidebar on wide screens; on phones the brand and sign out sit above the links, which wrap so every one stays visible. */
 export function AppLayout() {
   const t = useT();
   const { signOut } = useAuth();
@@ -38,14 +38,20 @@ export function AppLayout() {
   return (
     <div className="min-h-screen bg-slate-900 text-slate-100 md:flex">
       <aside className="md:w-52 md:shrink-0 md:min-h-screen border-b md:border-b-0 md:border-r border-slate-800 bg-slate-950">
-        <div className="px-4 py-3 flex md:flex-col md:items-stretch items-center gap-3">
-          <Link to="/" className="shrink-0 md:mb-3">
-            <BrandMark tone="dark" />
-          </Link>
-          <nav
-            aria-label={t("app.nav.label")}
-            className="flex md:flex-col gap-1 overflow-x-auto md:overflow-visible -mx-1 px-1"
-          >
+        <div className="px-4 py-3 flex flex-col gap-3">
+          <div className="flex items-center justify-between gap-3 md:mb-3">
+            <Link to="/" className="shrink-0">
+              <BrandMark tone="dark" />
+            </Link>
+            <button
+              type="button"
+              onClick={signOut}
+              className="md:hidden shrink-0 px-3 py-1.5 text-sm text-slate-300 border border-slate-700 hover:text-white hover:border-slate-500"
+            >
+              {t("common.signOut")}
+            </button>
+          </div>
+          <nav aria-label={t("app.nav.label")} className="flex flex-wrap md:flex-col gap-1">
             {items.map((item) => (
               <NavLink key={item.to} to={item.to} end={item.end} className={navClass}>
                 {t(item.key)}
@@ -54,13 +60,6 @@ export function AppLayout() {
             <Link to="/portal" className="md:hidden shrink-0 px-3 py-2 text-sm text-slate-400 hover:text-white">
               {t("app.nav.portal")}
             </Link>
-            <button
-              type="button"
-              onClick={signOut}
-              className="md:hidden shrink-0 px-3 py-2 text-sm text-slate-400 hover:text-white"
-            >
-              {t("common.signOut")}
-            </button>
           </nav>
           <div className="hidden md:flex md:flex-col gap-1 mt-4 pt-4 border-t border-slate-800">
             <Link to="/portal" className=" px-3 py-2 text-sm text-slate-400 hover:text-white hover:bg-slate-800">

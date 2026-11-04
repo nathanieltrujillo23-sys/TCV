@@ -31,12 +31,24 @@ export function Panel({ title, children, className = "" }: { title?: string; chi
   );
 }
 
-export function Field({ label, help, children, className = "" }: { label: string; help?: string; children: ReactNode; className?: string }) {
+export function Field({ label, help, children, className = "", group = false }: { label: string; help?: string; children: ReactNode; className?: string; group?: boolean }) {
+  const classes = `flex flex-col gap-1.5 text-xs font-medium text-slate-300 ${className}`;
+  const helpText = help && <span className="text-[11px] font-normal text-slate-500">{help}</span>;
+  // A <label> may only name one control, so a row of buttons (Toggle) is a named group instead.
+  if (group) {
+    return (
+      <div role="group" aria-label={label} className={classes}>
+        <span aria-hidden="true">{label}</span>
+        {children}
+        {helpText}
+      </div>
+    );
+  }
   return (
-    <label className={`flex flex-col gap-1.5 text-xs font-medium text-slate-300 ${className}`}>
+    <label className={classes}>
       {label}
       {children}
-      {help && <span className="text-[11px] font-normal text-slate-500">{help}</span>}
+      {helpText}
     </label>
   );
 }

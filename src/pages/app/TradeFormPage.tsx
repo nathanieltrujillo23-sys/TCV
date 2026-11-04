@@ -303,7 +303,7 @@ function TradeForm({ tradeId }: { tradeId: string | undefined }) {
                   {INSTRUMENTS.map((i) => <option key={i} value={i}>{t(`instrument.${i}` as StringKey)}</option>)}
                 </select>
               </Field>
-              <Field label={t("j.form.direction")}>
+              <Field label={t("j.form.direction")} group>
                 <Toggle value={form.direction} onChange={(v) => set({ direction: v })} options={[{ value: "long", label: t("j.long") }, { value: "short", label: t("j.short") }]} />
               </Field>
               <Field label={t("j.form.entryTime")}>
@@ -377,7 +377,7 @@ function TradeForm({ tradeId }: { tradeId: string | undefined }) {
 
           <Panel>
             <div className="grid gap-3 sm:grid-cols-2">
-              <Field label={t("j.form.grade")}>
+              <Field label={t("j.form.grade")} group>
                 <Toggle value={form.setupGrade} onChange={(v) => set({ setupGrade: form.setupGrade === v ? null : v })} options={GRADES.map((g) => ({ value: g, label: g }))} />
               </Field>
               <Field label={t("j.form.emotion")}>

@@ -3,6 +3,7 @@ import { useLedger } from "../state/LedgerContext";
 import type { Transaction } from "../types";
 import { dateInputToISO, isoToDateInput } from "../utils/date";
 import { DateInput } from "./DateInput";
+import { AttachmentIcon } from "./Icons";
 import { Modal } from "./Modal";
 
 export function TransactionEditRow({ transaction, onDone }: { transaction: Transaction; onDone: () => void }) {
@@ -263,8 +264,8 @@ export function TransactionEditRow({ transaction, onDone }: { transaction: Trans
           <div className="flex items-center gap-2 min-w-0">
             {t.receiptPath ? (
               <>
-                <button type="button" onClick={handleViewReceipt} className="text-slate-300 hover:text-white shrink-0">
-                  📎 View receipt
+                <button type="button" onClick={handleViewReceipt} className="inline-flex items-center gap-1 text-slate-300 hover:text-white shrink-0">
+                  <AttachmentIcon /> View receipt
                 </button>
                 <button
                   type="button"

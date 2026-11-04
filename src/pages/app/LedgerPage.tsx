@@ -13,13 +13,15 @@ import { TaxesView } from "../../components/TaxesView";
 import { MigrationPrompt } from "../../components/MigrationPrompt";
 import { FullScreenMessage } from "../../routes/guards";
 import { useDocumentTitle } from "../../hooks/useDocumentTitle";
+import { useT } from "../../i18n/LanguageContext";
 
 // The original single page ledger, moved here unchanged when routing was added.
 function LedgerContent() {
+  const t = useT();
   const { primaryView, viewMode, loading, loadError } = useLedger();
 
-  if (loading) return <FullScreenMessage>Loading your ledger…</FullScreenMessage>;
-  if (loadError) return <FullScreenMessage>Couldn't load your data: {loadError}</FullScreenMessage>;
+  if (loading) return <FullScreenMessage>{t("app.ledger.loading")}</FullScreenMessage>;
+  if (loadError) return <FullScreenMessage>{t("app.ledger.loadError", { error: loadError })}</FullScreenMessage>;
 
   return (
     <div className="min-h-screen bg-slate-900">

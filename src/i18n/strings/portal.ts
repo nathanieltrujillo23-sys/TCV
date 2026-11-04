@@ -56,6 +56,8 @@ export const portal = {
   "lesson.back": "All modules",
   "lesson.notFound": "That module doesn't exist.",
   "lesson.saveError": "Couldn't save your result: {error}",
+  "lesson.saving": "Saving your result…",
+  "lesson.saveRetry": "Save again",
   "lesson.signupCta": "Create an account",
 
   "tools.lead": "Change the numbers to see how each idea plays out. Results use fixed assumptions and are illustrations, not predictions.",

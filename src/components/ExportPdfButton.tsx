@@ -8,6 +8,7 @@ import { MarginTrendChart } from "./MarginTrendChart";
 import { TransactionCountChart } from "./TransactionCountChart";
 import { CumulativeChart } from "./CumulativeChart";
 import { PieChart } from "./PieChart";
+import { ExportIcon } from "./Icons";
 
 export function ExportPdfButton() {
   const { transactions } = useLedger();
@@ -88,7 +89,7 @@ export function ExportPdfButton() {
         {exporting ? (
           <span className="w-3 h-3 border-2 border-slate-400 border-t-transparent rounded-full animate-spin" />
         ) : (
-          "📤"
+          <ExportIcon />
         )}
       </button>
 

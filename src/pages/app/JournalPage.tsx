@@ -76,7 +76,7 @@ function DailyPanel({ settings }: { settings: JournalSettings | null }) {
             <Field label={t("j.day.post")}>
               <textarea value={day.postSession ?? ""} onChange={(e) => setDay({ ...day, postSession: e.target.value || null })} rows={3} className={inputClass} />
             </Field>
-            <Field label={t("j.day.followedPlan")}>
+            <Field label={t("j.day.followedPlan")} group>
               <Toggle
                 value={day.followedPlan === null ? null : day.followedPlan ? "yes" : "no"}
                 onChange={(v) => setDay({ ...day, followedPlan: v === "yes" })}

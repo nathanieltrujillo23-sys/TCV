@@ -3,6 +3,7 @@ import { useLedger } from "../state/LedgerContext";
 import { isWithinRange } from "../utils/period";
 import { formatCurrency, transactionTotal } from "../utils/format";
 import type { Transaction } from "../types";
+import { AttachmentIcon } from "./Icons";
 import { TransactionEditRow } from "./TransactionEditRow";
 
 export function TransactionList({ type }: { type: "income" | "expense" }) {
@@ -73,7 +74,7 @@ export function TransactionRow({
           t.category,
           t.accountMethod,
           purchases > 1 ? `${purchases} purchases · ${formatCurrency(t.amount)} ea` : null,
-          t.recurring ? `🔁 ${t.recurringFrequency ?? "recurring"}` : null,
+          t.recurring ? `repeats ${t.recurringFrequency ?? ""}`.trim() : null,
         ]
           .filter(Boolean)
           .join(" · ")
@@ -110,7 +111,7 @@ export function TransactionRow({
             title="View receipt"
             className="text-slate-500 hover:text-slate-200 text-xs"
           >
-            📎
+            <AttachmentIcon />
           </button>
         )}
         <button type="button" onClick={onEdit} className="text-slate-500 hover:text-slate-200 text-xs">
