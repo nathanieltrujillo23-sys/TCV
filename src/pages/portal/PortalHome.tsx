@@ -5,6 +5,7 @@ import { usePortalProgress } from "../../hooks/usePortalProgress";
 import { LESSONS } from "../../content/lessons";
 import { Container } from "../../components/site/SiteUI";
 import { EducationNote } from "../../components/portal/EducationNote";
+import { WorkbookCard } from "../../components/portal/WorkbookCard";
 
 export function PortalHome() {
   const t = useT();
@@ -60,13 +61,16 @@ export function PortalHome() {
               <p className="text-white/80">{t("portal.next.done")}</p>
             )}
           </section>
-          <section className="bg-paper border border-line border-t-2 border-t-accent p-6 flex flex-col gap-3">
-            <h2 className="text-lg font-semibold tracking-tight text-ink">{t("portal.tools.title")}</h2>
-            <p className="text-sm text-ink-soft">{t("portal.tools.card")}</p>
-            <Link to="/portal/tools" className="self-start mt-auto text-sm font-medium text-accent underline underline-offset-4 hover:text-accent-dark">
-              {t("portal.tools.open")}
-            </Link>
-          </section>
+          <div className="flex flex-col gap-5">
+            <WorkbookCard />
+            <section className="bg-paper border border-line border-t-2 border-t-accent p-6 flex flex-col gap-3">
+              <h2 className="text-lg font-semibold tracking-tight text-ink">{t("portal.tools.title")}</h2>
+              <p className="text-sm text-ink-soft">{t("portal.tools.card")}</p>
+              <Link to="/portal/tools" className="self-start mt-auto text-sm font-medium text-accent underline underline-offset-4 hover:text-accent-dark">
+                {t("portal.tools.open")}
+              </Link>
+            </section>
+          </div>
         </div>
 
         <section className="flex flex-col gap-3">

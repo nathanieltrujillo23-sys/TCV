@@ -7,6 +7,7 @@ import { DisclaimerGate } from "../components/portal/DisclaimerGate";
 
 const NAV = [
   { to: "/portal", key: "portal.nav.home", end: true },
+  { to: "/portal/workbook", key: "portal.nav.workbook", end: false },
   { to: "/portal/tools", key: "portal.nav.tools", end: false },
   { to: "/portal/account", key: "portal.nav.account", end: false },
 ] as const;

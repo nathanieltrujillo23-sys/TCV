@@ -41,6 +41,7 @@ export function ClientProgressTable() {
                 <th className="px-4 py-2 text-left font-medium">{t("dash.clients.type")}</th>
                 <th className="px-4 py-2 text-right font-medium">{t("dash.clients.modules")}</th>
                 <th className="px-4 py-2 text-right font-medium">{t("dash.clients.score")}</th>
+                <th className="px-4 py-2 text-left font-medium">{t("dash.clients.workbook")}</th>
                 <th className="px-4 py-2 text-left font-medium">{t("dash.clients.last")}</th>
                 <th className="px-4 py-2 text-left font-medium">{t("dash.clients.joined")}</th>
               </tr>
@@ -56,6 +57,9 @@ export function ClientProgressTable() {
                     {r.lessonsCompleted}/{LESSONS.length}
                   </td>
                   <td className="px-4 py-2 text-right font-mono text-slate-200">{r.averageScore === null ? "—" : `${r.averageScore}%`}</td>
+                  <td className="px-4 py-2 text-slate-300 whitespace-nowrap">
+                    {r.workbookCompleted ? t("dash.clients.wbDone") : r.workbookStarted ? t("dash.clients.wbStarted") : "—"}
+                  </td>
                   <td className="px-4 py-2 text-slate-300 whitespace-nowrap">{r.lastActivity ? dateFmt.format(new Date(r.lastActivity)) : "—"}</td>
                   <td className="px-4 py-2 text-slate-300 whitespace-nowrap">{dateFmt.format(new Date(r.joinedAt))}</td>
                 </tr>

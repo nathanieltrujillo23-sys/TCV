@@ -9,6 +9,8 @@ import { PortalLayout } from "./layouts/PortalLayout";
 import { PlaceholderPage } from "./pages/PlaceholderPage";
 import { SignInRoute } from "./pages/public/SignInRoute";
 import { NotFoundPage } from "./pages/public/NotFoundPage";
+import { PlanningPage } from "./pages/public/PlanningPage";
+import { WorkbookPage } from "./pages/portal/WorkbookPage";
 import { HomePage } from "./pages/public/HomePage";
 import { AboutPage } from "./pages/public/AboutPage";
 import { ServicesPage } from "./pages/public/ServicesPage";
@@ -43,6 +45,7 @@ function App() {
                 <Route path="services" element={<ServicesPage />} />
                 <Route path="learn" element={<LearnPage />} />
                 <Route path="learn/:lessonId" element={<PublicLessonPage />} />
+                <Route path="planning" element={<PlanningPage />} />
                 <Route path="contact" element={<ContactPage />} />
                 <Route path="disclosures" element={<LegalPage titleKey="disclosures.title" sections={DISCLOSURE_SECTIONS} />} />
                 <Route path="privacy" element={<LegalPage titleKey="privacy.title" introKey="privacy.intro" sections={PRIVACY_SECTIONS} />} />
@@ -91,6 +94,7 @@ function App() {
               >
                 <Route index element={<PortalHome />} />
                 <Route path="lessons/:lessonId" element={<PortalLessonPage />} />
+                <Route path="workbook" element={<WorkbookPage />} />
                 <Route path="tools" element={<ToolsPage />} />
                 <Route path="account" element={<PortalAccount />} />
               </Route>

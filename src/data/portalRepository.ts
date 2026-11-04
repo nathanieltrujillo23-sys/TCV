@@ -14,6 +14,8 @@ export interface ClientProgressRow {
   averageScore: number | null;
   lastActivity: string | null;
   joinedAt: string;
+  workbookStarted: boolean;
+  workbookCompleted: boolean;
 }
 
 export interface PortalRepository {
@@ -49,6 +51,8 @@ export function createSupabasePortalRepository(): PortalRepository {
         averageScore: r.average_score === null ? null : Number(r.average_score),
         lastActivity: (r.last_activity as string | null) ?? null,
         joinedAt: r.joined_at as string,
+        workbookStarted: r.workbook_started === true,
+        workbookCompleted: r.workbook_completed === true,
       }));
     },
   };

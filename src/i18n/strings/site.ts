@@ -84,6 +84,7 @@ export const site = {
   "services.tools.title": "Financial tools",
   "services.tools.body":
     "Calculators for compound growth, savings goals, debt payoff, and retirement contributions. Each one shows its formula and assumptions.",
+  "services.frameworksLink": "See the planning workbook",
   "services.note": "Examples and calculator results are hypothetical and for illustration only.",
   "services.ctaPrimary": "Create an account",
   "services.ctaSecondary": "Ask a question",

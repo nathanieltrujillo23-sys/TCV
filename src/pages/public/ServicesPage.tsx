@@ -1,5 +1,6 @@
 import { useT } from "../../i18n/LanguageContext";
 import { useDocumentTitle } from "../../hooks/useDocumentTitle";
+import { Link } from "react-router-dom";
 import { ButtonLink, Container, InfoCard, PageHeader } from "../../components/site/SiteUI";
 
 const SERVICES = [
@@ -20,7 +21,10 @@ export function ServicesPage() {
           <InfoCard key={s.titleKey} titleKey={s.titleKey} bodyKey={s.bodyKey} />
         ))}
       </div>
-      <p className="mt-6 text-sm text-ink-soft">{t("services.note")}</p>
+      <Link to="/planning" className="mt-6 inline-block text-sm font-medium text-accent underline underline-offset-4 hover:text-accent-dark">
+        {t("services.frameworksLink")}
+      </Link>
+      <p className="mt-4 text-sm text-ink-soft">{t("services.note")}</p>
       <div className="mt-10 flex flex-wrap gap-3">
         <ButtonLink to="/signup">{t("services.ctaPrimary")}</ButtonLink>
         <ButtonLink to="/contact" variant="secondary">{t("services.ctaSecondary")}</ButtonLink>

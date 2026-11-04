@@ -250,4 +250,7 @@ export const journal = {
   "dash.clients.typePerson": "Individual",
   "dash.clients.typeBusiness": "Business",
   "dash.clients.error": "Couldn't load client progress: {error}",
+  "dash.clients.workbook": "Workbook",
+  "dash.clients.wbStarted": "Started",
+  "dash.clients.wbDone": "Finished",
 } as const;
