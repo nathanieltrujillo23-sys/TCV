@@ -1,0 +1,26 @@
+export const site = {
+  "site.nav.about": "About",
+  "site.nav.services": "Services",
+  "site.nav.learn": "Learn",
+  "site.nav.contact": "Contact",
+  "site.nav.openApp": "Open app",
+  "site.nav.openPortal": "My portal",
+  "site.nav.menu": "Menu",
+
+  "site.footer.disclosures": "Disclosures",
+  "site.footer.privacy": "Privacy",
+  "site.footer.terms": "Terms",
+  "site.footer.copyright": "© {year} TruCapitalVentures LLC. Education only, not investment advice.",
+
+  "page.home.title": "TruCapitalVentures",
+  "page.home.body": "Financial education and technology. Our new website is on the way.",
+  "page.about.title": "About",
+  "page.services.title": "Services",
+  "page.learn.title": "Learn",
+  "page.contact.title": "Contact",
+  "page.disclosures.title": "Disclosures",
+  "page.privacy.title": "Privacy",
+  "page.terms.title": "Terms",
+  "page.notFound.title": "Page not found",
+  "page.notFound.body": "We couldn't find that page.",
+} as const;

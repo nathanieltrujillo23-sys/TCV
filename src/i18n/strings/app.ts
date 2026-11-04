@@ -1,0 +1,22 @@
+export const app = {
+  "app.nav.dashboard": "Dashboard",
+  "app.nav.ledger": "Ledger",
+  "app.nav.journal": "Journal",
+  "app.nav.accounts": "Accounts",
+  "app.nav.portfolio": "Portfolio",
+  "app.nav.messages": "Messages",
+  "app.nav.portal": "Client portal",
+  "app.nav.label": "Owner tools",
+
+  "app.dashboard.title": "Dashboard",
+  "app.dashboard.body": "Your private tools. Start with the ledger while the rest is built.",
+  "app.dashboard.openLedger": "Open the ledger",
+  "app.journal.title": "Trade journal",
+  "app.journal.new.title": "New trade",
+  "app.journal.trade.title": "Trade",
+  "app.journal.import.title": "Import trades",
+  "app.journal.stats.title": "Journal stats",
+  "app.accounts.title": "Trading accounts",
+  "app.portfolio.title": "Portfolio",
+  "app.messages.title": "Messages",
+} as const;

@@ -1,9 +1,9 @@
 import { useState, type FormEvent } from "react";
 import { useAuth } from "../state/AuthContext";
 
-export function SignInPage() {
+export function SignInPage({ initialMode = "signin" }: { initialMode?: "signin" | "signup" }) {
   const { signIn, signUp } = useAuth();
-  const [mode, setMode] = useState<"signin" | "signup">("signin");
+  const [mode, setMode] = useState<"signin" | "signup">(initialMode);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [businessName, setBusinessName] = useState("");

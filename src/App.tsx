@@ -1,73 +1,85 @@
-import { useMemo } from "react";
-import { LedgerProvider, useLedger } from "./state/LedgerContext";
-import { AuthProvider, useAuth } from "./state/AuthContext";
-import { createSupabaseRepository } from "./data/supabaseRepository";
-import { TopBar } from "./components/TopBar";
-import { Dashboard } from "./components/Dashboard";
-import { ExpenseForm } from "./components/ExpenseForm";
-import { IncomeForm } from "./components/IncomeForm";
-import { PresetsPanel } from "./components/PresetsPanel";
-import { TransactionList } from "./components/TransactionList";
-import { SummaryView } from "./components/SummaryView";
-import { TaxesView } from "./components/TaxesView";
-import { SignInPage } from "./components/SignInPage";
-import { MigrationPrompt } from "./components/MigrationPrompt";
-
-function FullScreenMessage({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="min-h-screen bg-slate-900 flex items-center justify-center px-4">
-      <p className="text-slate-400 text-sm text-center">{children}</p>
-    </div>
-  );
-}
-
-function AppContent() {
-  const { primaryView, viewMode, loading, loadError } = useLedger();
-
-  if (loading) return <FullScreenMessage>Loading your ledger…</FullScreenMessage>;
-  if (loadError) return <FullScreenMessage>Couldn't load your data: {loadError}</FullScreenMessage>;
-
-  return (
-    <div className="min-h-screen bg-slate-900">
-      <TopBar />
-      <MigrationPrompt />
-      {viewMode === "summary" ? (
-        <SummaryView />
-      ) : viewMode === "taxes" ? (
-        <TaxesView />
-      ) : (
-        <>
-          <Dashboard />
-          <main className="max-w-3xl mx-auto px-4 pb-16 flex flex-col gap-4">
-            {primaryView === "expense" ? <ExpenseForm /> : <IncomeForm />}
-            <PresetsPanel type={primaryView} />
-            <TransactionList type={primaryView} />
-          </main>
-        </>
-      )}
-    </div>
-  );
-}
-
-function AuthedApp() {
-  const { user, loading } = useAuth();
-  const repository = useMemo(() => (user ? createSupabaseRepository(user.id) : null), [user]);
-
-  if (loading) return <FullScreenMessage>Loading…</FullScreenMessage>;
-  if (!user || !repository) return <SignInPage />;
-
-  return (
-    <LedgerProvider key={user.id} repository={repository}>
-      <AppContent />
-    </LedgerProvider>
-  );
-}
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { AuthProvider } from "./state/AuthContext";
+import { ProfileProvider } from "./state/ProfileContext";
+import { LanguageProvider } from "./i18n/LanguageContext";
+import { RequireAuth, RequireOwner, RequireStaff } from "./routes/guards";
+import { PublicLayout } from "./layouts/PublicLayout";
+import { AppLayout } from "./layouts/AppLayout";
+import { PortalLayout } from "./layouts/PortalLayout";
+import { PlaceholderPage } from "./pages/PlaceholderPage";
+import { SignInRoute } from "./pages/public/SignInRoute";
+import { NotFoundPage } from "./pages/public/NotFoundPage";
+import { AppDashboard } from "./pages/app/AppDashboard";
+import { LedgerPage } from "./pages/app/LedgerPage";
+import { PortalAccount } from "./pages/portal/PortalAccount";
 
 function App() {
   return (
-    <AuthProvider>
-      <AuthedApp />
-    </AuthProvider>
+    <LanguageProvider>
+      <AuthProvider>
+        <ProfileProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route element={<PublicLayout />}>
+                <Route index element={<PlaceholderPage titleKey="page.home.title" bodyKey="page.home.body" />} />
+                <Route path="about" element={<PlaceholderPage titleKey="page.about.title" />} />
+                <Route path="services" element={<PlaceholderPage titleKey="page.services.title" />} />
+                <Route path="learn" element={<PlaceholderPage titleKey="page.learn.title" />} />
+                <Route path="contact" element={<PlaceholderPage titleKey="page.contact.title" />} />
+                <Route path="disclosures" element={<PlaceholderPage titleKey="page.disclosures.title" />} />
+                <Route path="privacy" element={<PlaceholderPage titleKey="page.privacy.title" />} />
+                <Route path="terms" element={<PlaceholderPage titleKey="page.terms.title" />} />
+                <Route path="*" element={<NotFoundPage />} />
+              </Route>
+
+              <Route path="signin" element={<SignInRoute mode="signin" />} />
+              <Route path="signup" element={<SignInRoute mode="signup" />} />
+
+              <Route
+                path="app"
+                element={
+                  <RequireStaff>
+                    <AppLayout />
+                  </RequireStaff>
+                }
+              >
+                <Route index element={<AppDashboard />} />
+                <Route path="ledger" element={<LedgerPage />} />
+                <Route path="journal" element={<PlaceholderPage titleKey="app.journal.title" />} />
+                <Route path="journal/new" element={<PlaceholderPage titleKey="app.journal.new.title" />} />
+                <Route path="journal/import" element={<PlaceholderPage titleKey="app.journal.import.title" />} />
+                <Route path="journal/stats" element={<PlaceholderPage titleKey="app.journal.stats.title" />} />
+                <Route path="journal/:tradeId" element={<PlaceholderPage titleKey="app.journal.trade.title" />} />
+                <Route path="accounts" element={<PlaceholderPage titleKey="app.accounts.title" />} />
+                <Route path="portfolio" element={<PlaceholderPage titleKey="app.portfolio.title" />} />
+                <Route
+                  path="messages"
+                  element={
+                    <RequireOwner>
+                      <PlaceholderPage titleKey="app.messages.title" />
+                    </RequireOwner>
+                  }
+                />
+              </Route>
+
+              <Route
+                path="portal"
+                element={
+                  <RequireAuth>
+                    <PortalLayout />
+                  </RequireAuth>
+                }
+              >
+                <Route index element={<PlaceholderPage titleKey="portal.home.title" bodyKey="portal.home.body" />} />
+                <Route path="lessons/:lessonId" element={<PlaceholderPage titleKey="portal.lesson.title" />} />
+                <Route path="tools" element={<PlaceholderPage titleKey="portal.tools.title" />} />
+                <Route path="account" element={<PortalAccount />} />
+              </Route>
+            </Routes>
+          </BrowserRouter>
+        </ProfileProvider>
+      </AuthProvider>
+    </LanguageProvider>
   );
 }
 
