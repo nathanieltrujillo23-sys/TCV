@@ -20,7 +20,7 @@ function navClass({ isActive }: { isActive: boolean }) {
 export function PortalLayout() {
   const t = useT();
   const { signOut } = useAuth();
-  const { isStaff } = useProfile();
+  const { access } = useProfile();
 
   return (
     <div className="min-h-screen bg-surface text-ink font-sans [color-scheme:light]">
@@ -36,7 +36,7 @@ export function PortalLayout() {
                   {t(item.key)}
                 </NavLink>
               ))}
-              {isStaff && (
+              {access.workspace && (
                 <NavLink to="/app" className={navClass}>
                   {t("site.nav.openApp")}
                 </NavLink>

@@ -3,6 +3,8 @@ import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "../state/AuthContext";
 import { useProfile } from "../state/ProfileContext";
 import { useT } from "../i18n/LanguageContext";
+import type { Access } from "../lib/access";
+import { homePathFor } from "./homePath";
 
 export function FullScreenMessage({ children }: { children: ReactNode }) {
   return (
@@ -25,22 +27,8 @@ export function RequireAuth({ children }: { children: ReactNode }) {
   return <>{children}</>;
 }
 
-/** Owner or admin only. Everyone else is sent to the client portal. */
-export function RequireStaff({ children }: { children: ReactNode }) {
-  const { isStaff } = useProfile();
-  return (
-    <RequireAuth>
-      {isStaff ? children : <Navigate to="/portal" replace />}
-    </RequireAuth>
-  );
-}
-
-/** Owner only (contact inbox, client progress). Admins go back to /app, clients to /portal. */
-export function RequireOwner({ children }: { children: ReactNode }) {
-  const { isOwner, isStaff } = useProfile();
-  return (
-    <RequireAuth>
-      {isOwner ? children : <Navigate to={isStaff ? "/app" : "/portal"} replace />}
-    </RequireAuth>
-  );
+/** Signed in AND allowed to use a given tool. Others go to their own home area. */
+export function RequireAccess({ need, children }: { need: keyof Access; children: ReactNode }) {
+  const { access } = useProfile();
+  return <RequireAuth>{access[need] ? children : <Navigate to={homePathFor(access)} replace />}</RequireAuth>;
 }

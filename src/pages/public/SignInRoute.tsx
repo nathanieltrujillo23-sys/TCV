@@ -11,14 +11,14 @@ import { useDocumentTitle } from "../../hooks/useDocumentTitle";
 export function SignInRoute({ mode }: { mode: "signin" | "signup" }) {
   const t = useT();
   const { user } = useAuth();
-  const { loading, isStaff } = useProfile();
+  const { loading, access } = useProfile();
   const location = useLocation();
   useDocumentTitle(mode === "signin" ? "auth.tab.signIn" : "auth.tab.signUp");
 
   if (loading) return <FullScreenMessage>{t("common.loading")}</FullScreenMessage>;
   if (user) {
     const from = (location.state as { from?: string } | null)?.from;
-    return <Navigate to={from ?? homePathFor(isStaff)} replace />;
+    return <Navigate to={from ?? homePathFor(access)} replace />;
   }
   return <SignInPage key={mode} initialMode={mode} />;
 }

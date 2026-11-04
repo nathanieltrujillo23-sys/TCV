@@ -9,8 +9,9 @@ export const app = {
   "app.nav.label": "Owner tools",
 
   "app.dashboard.title": "Dashboard",
-  "app.dashboard.body": "Your private tools. Start with the ledger while the rest is built.",
+  "app.dashboard.body": "Your private tools. Each one keeps your data visible only to you.",
   "app.dashboard.openLedger": "Open the ledger",
+  "app.dashboard.openJournal": "Open the trade journal",
   "app.journal.title": "Trade journal",
   "app.journal.new.title": "New trade",
   "app.journal.trade.title": "Trade",

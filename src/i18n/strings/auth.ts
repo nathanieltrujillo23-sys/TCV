@@ -5,7 +5,6 @@ export const auth = {
   "auth.email": "Email",
   "auth.emailPlaceholder": "you@example.com",
   "auth.password": "Password",
-  "auth.businessName": "Business name (optional)",
   "auth.submit.signIn": "Sign in",
   "auth.submit.signUp": "Create account",
   "auth.working": "Working…",

@@ -1,6 +1,7 @@
 import { Link, NavLink, Outlet } from "react-router-dom";
 import { useT } from "../i18n/LanguageContext";
 import type { StringKey } from "../i18n/en";
+import type { Access } from "../lib/access";
 import { useAuth } from "../state/AuthContext";
 import { useProfile } from "../state/ProfileContext";
 import { BrandMark } from "../components/site/SiteUI";
@@ -9,16 +10,16 @@ interface NavItem {
   to: string;
   key: StringKey;
   end?: boolean;
-  ownerOnly?: boolean;
+  need: keyof Access;
 }
 
 const NAV: NavItem[] = [
-  { to: "/app", key: "app.nav.dashboard", end: true },
-  { to: "/app/ledger", key: "app.nav.ledger" },
-  { to: "/app/journal", key: "app.nav.journal" },
-  { to: "/app/accounts", key: "app.nav.accounts" },
-  { to: "/app/portfolio", key: "app.nav.portfolio" },
-  { to: "/app/messages", key: "app.nav.messages", ownerOnly: true },
+  { to: "/app", key: "app.nav.dashboard", end: true, need: "workspace" },
+  { to: "/app/ledger", key: "app.nav.ledger", need: "ledger" },
+  { to: "/app/journal", key: "app.nav.journal", need: "journal" },
+  { to: "/app/accounts", key: "app.nav.accounts", need: "journal" },
+  { to: "/app/portfolio", key: "app.nav.portfolio", need: "staffTools" },
+  { to: "/app/messages", key: "app.nav.messages", need: "ownerTools" },
 ];
 
 function navClass({ isActive }: { isActive: boolean }) {
@@ -31,8 +32,8 @@ function navClass({ isActive }: { isActive: boolean }) {
 export function AppLayout() {
   const t = useT();
   const { signOut } = useAuth();
-  const { isOwner } = useProfile();
-  const items = NAV.filter((item) => !item.ownerOnly || isOwner);
+  const { access } = useProfile();
+  const items = NAV.filter((item) => access[item.need]);
 
   return (
     <div className="min-h-screen bg-slate-900 text-slate-100 md:flex">

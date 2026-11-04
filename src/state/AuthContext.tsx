@@ -1,6 +1,14 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import type { User } from "@supabase/supabase-js";
 import { supabase } from "../lib/supabaseClient";
+import type { AccountType, Employment } from "../lib/access";
+
+export interface SignUpDetails {
+  accountType: AccountType;
+  employment?: Employment;
+  businessTrades?: boolean;
+  businessName?: string;
+}
 
 interface AuthContextValue {
   user: User | null;
@@ -10,7 +18,7 @@ interface AuthContextValue {
   signUp: (
     email: string,
     password: string,
-    businessName?: string
+    details: SignUpDetails
   ) => Promise<{ error: string | null; needsConfirmation: boolean }>;
   signOut: () => Promise<void>;
   updateBusinessName: (name: string) => Promise<{ error: string | null }>;
@@ -42,17 +50,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return { error: error?.message ?? null };
   };
 
-  const signUp: AuthContextValue["signUp"] = async (email, password, businessName) => {
-    const trimmedName = businessName?.trim();
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: trimmedName ? { data: { business_name: trimmedName } } : undefined,
-    });
+  const signUp: AuthContextValue["signUp"] = async (email, password, details) => {
+    const trimmedName = details.businessName?.trim();
+    const isBusiness = details.accountType === "business";
+    // Copied into the profile by the signup trigger, which validates every value.
+    const data: Record<string, string | boolean> = {
+      account_type: details.accountType,
+      business_trades: isBusiness && !!details.businessTrades,
+    };
+    if (!isBusiness && details.employment) data.employment = details.employment;
+    if (isBusiness && trimmedName) data.business_name = trimmedName;
+    const { data: result, error } = await supabase.auth.signUp({ email, password, options: { data } });
     if (error) return { error: error.message, needsConfirmation: false };
     // If email confirmation is required, Supabase returns a user but no
     // session — the caller should tell the person to check their inbox.
-    return { error: null, needsConfirmation: !data.session };
+    return { error: null, needsConfirmation: !result.session };
   };
 
   const signOut = async () => {

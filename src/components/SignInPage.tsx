@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../state/AuthContext";
 import { useT } from "../i18n/LanguageContext";
 import { BrandMark } from "./site/SiteUI";
+import { AccountDetailsFields } from "./AccountDetailsFields";
+import { accountDetailsError, type AccountDetailsValue } from "../lib/accountDetails";
 
 export function SignInPage({ initialMode = "signin" }: { initialMode?: "signin" | "signup" }) {
   const t = useT();
@@ -11,6 +13,7 @@ export function SignInPage({ initialMode = "signin" }: { initialMode?: "signin" 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [businessName, setBusinessName] = useState("");
+  const [details, setDetails] = useState<AccountDetailsValue>({ accountType: null, employment: null, businessTrades: false });
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
   const [busy, setBusy] = useState(false);
@@ -24,6 +27,11 @@ export function SignInPage({ initialMode = "signin" }: { initialMode?: "signin" 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     if (!email.trim() || !password) return;
+    const detailsProblem = mode === "signup" ? accountDetailsError(details) : null;
+    if (detailsProblem) {
+      setError(t(detailsProblem));
+      return;
+    }
     setBusy(true);
     setError("");
     setNotice("");
@@ -33,7 +41,12 @@ export function SignInPage({ initialMode = "signin" }: { initialMode?: "signin" 
       setBusy(false);
       if (error) setError(error);
     } else {
-      const { error, needsConfirmation } = await signUp(email.trim(), password, businessName);
+      const { error, needsConfirmation } = await signUp(email.trim(), password, {
+        accountType: details.accountType!,
+        employment: details.employment ?? undefined,
+        businessTrades: details.businessTrades,
+        businessName,
+      });
       setBusy(false);
       if (error) {
         setError(error);
@@ -100,10 +113,11 @@ export function SignInPage({ initialMode = "signin" }: { initialMode?: "signin" 
               />
             </label>
             {mode === "signup" && (
-              <label className="flex flex-col gap-1.5 text-sm font-medium">
-                {t("auth.businessName")}
-                <input type="text" value={businessName} onChange={(e) => setBusinessName(e.target.value)} className={input} />
-              </label>
+              <AccountDetailsFields
+                value={details}
+                onChange={setDetails}
+                businessName={{ value: businessName, onChange: setBusinessName }}
+              />
             )}
             <button
               type="submit"

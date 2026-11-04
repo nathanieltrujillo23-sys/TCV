@@ -43,7 +43,7 @@ The accounting ledger (`src/components`, `src/state/LedgerContext.tsx`, `src/dat
 ## Security rules (non negotiable)
 
 1. Every new table has row level security enabled with explicit policies.
-2. Private tools (ledger, journal, accounts, portfolio) are readable and writable only when `public.is_staff()` returns true (role `owner` or `admin`), and every account sees only its own rows (`user_id = auth.uid()`). Owner only features (contact inbox, client progress) use `public.is_owner()`.
+2. Every account sees only its own rows (`user_id = auth.uid()`). On top of that, the ledger requires `public.has_ledger_access()`, the journal requires `public.has_journal_access()`, staff-only tools (portfolio, AI review) require `public.is_staff()`, and owner-only features (contact inbox, client progress) require `public.is_owner()`. See spec section 2 for who gets what.
 3. Clients can read and write only their own rows (`user_id = auth.uid()`).
 4. Storage buckets are private. Files live under `<user_id>/...` and are viewed with signed URLs.
 5. `SUPABASE_SERVICE_ROLE_KEY` and `GEMINI_API_KEY` never appear in `src/`, never use the `VITE_` prefix, and never get committed. `.env.local` stays in `.gitignore`.

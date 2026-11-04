@@ -2,7 +2,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { AuthProvider } from "./state/AuthContext";
 import { ProfileProvider } from "./state/ProfileContext";
 import { LanguageProvider } from "./i18n/LanguageContext";
-import { RequireAuth, RequireOwner, RequireStaff } from "./routes/guards";
+import { RequireAccess, RequireAuth } from "./routes/guards";
 import { PublicLayout } from "./layouts/PublicLayout";
 import { AppLayout } from "./layouts/AppLayout";
 import { PortalLayout } from "./layouts/PortalLayout";
@@ -46,26 +46,26 @@ function App() {
               <Route
                 path="app"
                 element={
-                  <RequireStaff>
+                  <RequireAccess need="workspace">
                     <AppLayout />
-                  </RequireStaff>
+                  </RequireAccess>
                 }
               >
                 <Route index element={<AppDashboard />} />
-                <Route path="ledger" element={<LedgerPage />} />
-                <Route path="journal" element={<PlaceholderPage titleKey="app.journal.title" />} />
-                <Route path="journal/new" element={<PlaceholderPage titleKey="app.journal.new.title" />} />
-                <Route path="journal/import" element={<PlaceholderPage titleKey="app.journal.import.title" />} />
-                <Route path="journal/stats" element={<PlaceholderPage titleKey="app.journal.stats.title" />} />
-                <Route path="journal/:tradeId" element={<PlaceholderPage titleKey="app.journal.trade.title" />} />
-                <Route path="accounts" element={<PlaceholderPage titleKey="app.accounts.title" />} />
-                <Route path="portfolio" element={<PlaceholderPage titleKey="app.portfolio.title" />} />
+                <Route path="ledger" element={<RequireAccess need="ledger"><LedgerPage /></RequireAccess>} />
+                <Route path="journal" element={<RequireAccess need="journal"><PlaceholderPage titleKey="app.journal.title" /></RequireAccess>} />
+                <Route path="journal/new" element={<RequireAccess need="journal"><PlaceholderPage titleKey="app.journal.new.title" /></RequireAccess>} />
+                <Route path="journal/import" element={<RequireAccess need="journal"><PlaceholderPage titleKey="app.journal.import.title" /></RequireAccess>} />
+                <Route path="journal/stats" element={<RequireAccess need="journal"><PlaceholderPage titleKey="app.journal.stats.title" /></RequireAccess>} />
+                <Route path="journal/:tradeId" element={<RequireAccess need="journal"><PlaceholderPage titleKey="app.journal.trade.title" /></RequireAccess>} />
+                <Route path="accounts" element={<RequireAccess need="journal"><PlaceholderPage titleKey="app.accounts.title" /></RequireAccess>} />
+                <Route path="portfolio" element={<RequireAccess need="staffTools"><PlaceholderPage titleKey="app.portfolio.title" /></RequireAccess>} />
                 <Route
                   path="messages"
                   element={
-                    <RequireOwner>
+                    <RequireAccess need="ownerTools">
                       <MessagesPage />
-                    </RequireOwner>
+                    </RequireAccess>
                   }
                 />
               </Route>

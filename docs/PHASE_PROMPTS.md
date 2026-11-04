@@ -58,12 +58,12 @@ All copy goes in en.ts. When done, give me a test script and screenshots descrip
 ## Phase 2: Trade journal core
 
 ```
-Read CLAUDE.md and spec sections 4 (005_trade_journal.sql) and 5.
+Read CLAUDE.md and spec sections 2, 4 (006_trade_journal.sql) and 5.
 
 Goal: a manual NQ/MNQ trade journal with prop account tracking and stats.
 
 Do:
-1. Write supabase/005_trade_journal.sql per the spec, including the private trade-screenshots bucket and owner only policies.
+1. Write supabase/006_trade_journal.sql per the spec, including the private trade-screenshots bucket, policies using has_journal_access(), and per-trader checklist rules.
 2. Write src/lib/tradeMath.ts and src/lib/standAside.ts with full Vitest coverage, including: long and short winners and losers for NQ and MNQ, fees, R multiple with and without a stop, entries at 09:29:59, 09:30:00, 10:29:59 and 10:30:00 New York time in both summer and winter, a Friday, a date inside December 16 to 31, and a CPI date from src/content/eventDays.ts.
 3. Build a JournalRepository in src/data/ following the LedgerRepository pattern.
 4. /app/accounts: create and edit trading accounts with the rule fields. Show an account health card per spec section 5.
@@ -160,7 +160,7 @@ Read CLAUDE.md (Compliance rules) and spec section 8.
 Goal: the signed in education portal for clients.
 
 Do:
-1. Write supabase/007_portal.sql per the spec.
+1. Write supabase/008_portal.sql per the spec.
 2. Port and generalize lesson content and calculators from the four-rivers repo (src/content/lessons, src/components/wealth/WealthToolkit.tsx, RetirementTab.tsx, trackers). Remove all faith specific and 4 Rivers branded content. Rewrite where needed so every lesson is general financial education with objectives, body, key terms, and a 3 question quiz.
 3. Lessons: budgeting and cash flow, emergency funds, debt, compound growth, risk and diversification, retirement accounts basics, setting financial objectives, how to work with a licensed adviser.
 4. Tools page: compound growth, savings goal, debt payoff, retirement contribution, each with a one paragraph explanation of the math.

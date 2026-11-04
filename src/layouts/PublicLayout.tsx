@@ -20,7 +20,7 @@ function navClass({ isActive }: { isActive: boolean }) {
 export function PublicLayout() {
   const t = useT();
   const { user } = useAuth();
-  const { isStaff, loading } = useProfile();
+  const { access, loading } = useProfile();
   const [menuOpen, setMenuOpen] = useState(false);
   const close = () => setMenuOpen(false);
   const { pathname } = useLocation();
@@ -31,7 +31,7 @@ export function PublicLayout() {
 
   const account =
     user && !loading
-      ? { to: homePathFor(isStaff), label: t(isStaff ? "site.nav.openApp" : "site.nav.openPortal") }
+      ? { to: homePathFor(access), label: t(access.workspace ? "site.nav.openApp" : "site.nav.openPortal") }
       : { to: "/signin", label: t("common.signIn") };
 
   return (

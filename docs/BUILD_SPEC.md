@@ -37,18 +37,30 @@ Strip anything faith specific or 4 Rivers branded when porting.
 
 Every account keeps its own private data. Owners do not see each other's ledger rows. `public.is_staff()` means owner or admin.
 
+**Account types (added 2026-11-04, migration 005).** Signup asks "individual or business". Individuals choose an employment status (student, employed, self-employed, trader, retired, not currently working, other). Businesses give an optional name and answer "Does your business trade financial markets?". People can change these answers later on `/portal/account`.
+
+| Tool | Who can use it (`src/lib/access.ts`, mirrored by SQL functions) |
+|---|---|
+| Portal lessons and finance tools | Everyone signed in |
+| Ledger (`/app/ledger`) | Owners, admins, businesses (`has_ledger_access()`) |
+| Trade journal and accounts (`/app/journal`, `/app/accounts`) | Owners, admins, individual traders, businesses that trade (`has_journal_access()`) |
+| Portfolio, AI trade review | Owners and admins (`is_staff()`) |
+| Contact inbox, client progress | Owners (`is_owner()`) |
+
+Anyone with a ledger or journal lands on `/app`, and the sidebar shows only their tools. Everyone else lands on `/portal`. Each trader writes their own journal checklist rules; Nate's rules are preloaded for his accounts. AI trade review stays owners and admins only, because Gemini's free tier may use the data.
+
 Signups stay open but always land as `client`. Existing ledger rows belong to Nate's user id and are unaffected.
 
 ## 3. Route map
 
 **Public** (no auth): `/` home · `/about` · `/services` (education offerings, framed as education) · `/learn` (two free sample lessons) · `/contact` (form) · `/disclosures` · `/privacy` · `/terms` · `/signin` · `/signup`
 
-**Owner and admin** (`is_staff` required, otherwise redirect to `/portal`; `/app/messages` requires `is_owner`):
+**Workspace** (any account with ledger or journal access, otherwise redirect to `/portal`; each page checks its own tool, and `/app/messages` requires `is_owner`):
 `/app` dashboard · `/app/ledger` (existing ledger, unchanged inside) · `/app/journal` · `/app/journal/new` · `/app/journal/:tradeId` · `/app/journal/import` · `/app/journal/stats` · `/app/accounts` (prop firm accounts) · `/app/portfolio` · `/app/messages` (contact form inbox)
 
 **Client** (signed in): `/portal` home · `/portal/lessons/:lessonId` · `/portal/tools` (calculators) · `/portal/account`
 
-## 4. Database contract (migrations 004 to 007)
+## 4. Database contract (migrations 004 to 008)
 
 All tables: `id uuid primary key default gen_random_uuid()`, `user_id uuid references auth.users not null default auth.uid()`, `created_at timestamptz default now()`, RLS on.
 
@@ -81,7 +93,10 @@ create table if not exists contact_messages (
 ```
 One time step for Nate, in the same SQL run: set `owner` for `trucapitalventures@gmail.com` and `nathanieltrujillo23@gmail.com`, `admin` for `deoxitytv@gmail.com` and `claude-test@tcv-accounting.local`.
 
-### 005_trade_journal.sql
+### 005_account_types.sql
+Adds `account_type`, `employment`, `business_trades` to `profiles`, copies them from signup metadata in the trigger (validated), adds `has_ledger_access()` and `has_journal_access()`, and switches ledger and receipts policies to `has_ledger_access()`. Already written and in the repo.
+
+### 006_trade_journal.sql
 ```sql
 trading_accounts (
   label text not null,                       -- "Lucid 50K Flex #1"
@@ -132,9 +147,9 @@ journal_days ( day date not null, bias text, premarket_plan text,
   news_flags text[], post_session text, followed_plan boolean,
   unique (user_id, day) )                     -- DAWN briefs land in premarket_plan later
 ```
-Private bucket `trade-screenshots`, path `<user_id>/<trade_id>/<file>`. All five tables staff only (owner or admin), each account sees its own rows.
+Private bucket `trade-screenshots`, path `<user_id>/<trade_id>/<file>`. All five tables use `user_id = auth.uid() AND public.has_journal_access()`. The strategy checklist is per trader: add a `journal_rules` table (owner of row = trader) holding each trader's rule labels and trading window, and store checklist answers per trade against those rules. Nate's rules are seeded for his accounts.
 
-### 006_portfolio.sql
+### 007_portfolio.sql
 ```sql
 holdings ( account_label text, symbol text not null,
   asset_class text check (asset_class in ('equity','etf','bond','cash','crypto','other')),
@@ -143,7 +158,7 @@ holdings ( account_label text, symbol text not null,
 ```
 Staff only, own rows. Prices are entered by hand at launch (no paid data feed).
 
-### 007_portal.sql
+### 008_portal.sql
 ```sql
 lesson_progress ( lesson_id text not null, completed_at timestamptz default now(),
   quiz_score int, unique (user_id, lesson_id) )
