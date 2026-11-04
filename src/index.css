@@ -1,4 +1,19 @@
 @import "tailwindcss";
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/source-serif-4";
+
+/* Public site palette and type. The private app keeps Tailwind's slate theme. */
+@theme {
+  --font-display: "Source Serif 4 Variable", Georgia, "Times New Roman", serif;
+  --font-body: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --color-ink: #0b1f3a;
+  --color-ink-soft: #3d4b5f;
+  --color-paper: #f8f7f4;
+  --color-card: #ffffff;
+  --color-line: #e4e1d9;
+  --color-accent: #0f766e;
+  --color-accent-dark: #115e59;
+}
 
 :root {
   color-scheme: dark;

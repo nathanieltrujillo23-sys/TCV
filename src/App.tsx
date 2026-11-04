@@ -9,6 +9,14 @@ import { PortalLayout } from "./layouts/PortalLayout";
 import { PlaceholderPage } from "./pages/PlaceholderPage";
 import { SignInRoute } from "./pages/public/SignInRoute";
 import { NotFoundPage } from "./pages/public/NotFoundPage";
+import { HomePage } from "./pages/public/HomePage";
+import { AboutPage } from "./pages/public/AboutPage";
+import { ServicesPage } from "./pages/public/ServicesPage";
+import { LearnPage } from "./pages/public/LearnPage";
+import { ContactPage } from "./pages/public/ContactPage";
+import { LegalPage } from "./pages/public/LegalPage";
+import { DISCLOSURE_SECTIONS, PRIVACY_SECTIONS, TERMS_SECTIONS } from "./pages/public/legalSections";
+import { MessagesPage } from "./pages/app/MessagesPage";
 import { AppDashboard } from "./pages/app/AppDashboard";
 import { LedgerPage } from "./pages/app/LedgerPage";
 import { PortalAccount } from "./pages/portal/PortalAccount";
@@ -21,14 +29,14 @@ function App() {
           <BrowserRouter>
             <Routes>
               <Route element={<PublicLayout />}>
-                <Route index element={<PlaceholderPage titleKey="page.home.title" bodyKey="page.home.body" />} />
-                <Route path="about" element={<PlaceholderPage titleKey="page.about.title" />} />
-                <Route path="services" element={<PlaceholderPage titleKey="page.services.title" />} />
-                <Route path="learn" element={<PlaceholderPage titleKey="page.learn.title" />} />
-                <Route path="contact" element={<PlaceholderPage titleKey="page.contact.title" />} />
-                <Route path="disclosures" element={<PlaceholderPage titleKey="page.disclosures.title" />} />
-                <Route path="privacy" element={<PlaceholderPage titleKey="page.privacy.title" />} />
-                <Route path="terms" element={<PlaceholderPage titleKey="page.terms.title" />} />
+                <Route index element={<HomePage />} />
+                <Route path="about" element={<AboutPage />} />
+                <Route path="services" element={<ServicesPage />} />
+                <Route path="learn" element={<LearnPage />} />
+                <Route path="contact" element={<ContactPage />} />
+                <Route path="disclosures" element={<LegalPage titleKey="disclosures.title" sections={DISCLOSURE_SECTIONS} />} />
+                <Route path="privacy" element={<LegalPage titleKey="privacy.title" introKey="privacy.intro" sections={PRIVACY_SECTIONS} />} />
+                <Route path="terms" element={<LegalPage titleKey="terms.title" introKey="terms.intro" sections={TERMS_SECTIONS} />} />
                 <Route path="*" element={<NotFoundPage />} />
               </Route>
 
@@ -56,7 +64,7 @@ function App() {
                   path="messages"
                   element={
                     <RequireOwner>
-                      <PlaceholderPage titleKey="app.messages.title" />
+                      <MessagesPage />
                     </RequireOwner>
                   }
                 />

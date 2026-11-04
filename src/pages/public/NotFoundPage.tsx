@@ -1,14 +1,17 @@
 import { Link } from "react-router-dom";
 import { useT } from "../../i18n/LanguageContext";
-import { PlaceholderPage } from "../PlaceholderPage";
+import { useDocumentTitle } from "../../hooks/useDocumentTitle";
+import { Container, PageHeader } from "../../components/site/SiteUI";
 
 export function NotFoundPage() {
   const t = useT();
+  useDocumentTitle("page.notFound.title");
   return (
-    <PlaceholderPage titleKey="page.notFound.title" bodyKey="page.notFound.body">
-      <Link to="/" className="self-start text-sm text-slate-300 underline hover:text-white">
+    <Container narrow>
+      <PageHeader titleKey="page.notFound.title" leadKey="page.notFound.body" />
+      <Link to="/" className="text-accent font-medium underline underline-offset-4 hover:text-accent-dark">
         {t("common.backHome")}
       </Link>
-    </PlaceholderPage>
+    </Container>
   );
 }

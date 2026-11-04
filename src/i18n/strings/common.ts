@@ -7,4 +7,5 @@ export const common = {
   "common.backHome": "Back to home",
   "common.profileError": "Couldn't load your account: {error}",
   "common.placeholderBody": "This page is being built. Check back soon.",
+  "common.pageTitle": "{page} | TruCapitalVentures",
 } as const;
