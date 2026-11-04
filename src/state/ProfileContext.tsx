@@ -29,6 +29,7 @@ interface ProfileContextValue {
   loading: boolean;
   error: string | null;
   updateAnswers: (answers: ProfileAnswers) => Promise<{ error: string | null }>;
+  acceptDisclaimer: () => Promise<{ error: string | null }>;
 }
 
 const ProfileContext = createContext<ProfileContextValue | null>(null);
@@ -97,6 +98,19 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
     [userId]
   );
 
+  const acceptDisclaimer = useCallback<ProfileContextValue["acceptDisclaimer"]>(async () => {
+    if (!userId) return { error: "Not signed in" };
+    const { data, error } = await supabase
+      .from("profiles")
+      .update({ disclaimer_accepted_at: new Date().toISOString() })
+      .eq("id", userId)
+      .select(COLUMNS)
+      .single();
+    if (error) return { error: error.message };
+    setLoaded({ userId, error: null, profile: toProfile(data) });
+    return { error: null };
+  }, [userId]);
+
   const current = userId && loaded?.userId === userId ? loaded : null;
   const loading = authLoading || (userId !== null && current === null);
   const profile = current?.profile ?? null;
@@ -121,8 +135,9 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
       loading,
       error: current?.error ?? null,
       updateAnswers,
+      acceptDisclaimer,
     };
-  }, [profile, role, loading, current, updateAnswers]);
+  }, [profile, role, loading, current, updateAnswers, acceptDisclaimer]);
 
   return <ProfileContext.Provider value={value}>{children}</ProfileContext.Provider>;
 }

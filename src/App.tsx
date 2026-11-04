@@ -25,6 +25,10 @@ import { AccountsPage } from "./pages/app/AccountsPage";
 import { AppDashboard } from "./pages/app/AppDashboard";
 import { LedgerPage } from "./pages/app/LedgerPage";
 import { PortalAccount } from "./pages/portal/PortalAccount";
+import { PortalHome } from "./pages/portal/PortalHome";
+import { PortalLessonPage } from "./pages/portal/PortalLessonPage";
+import { ToolsPage } from "./pages/portal/ToolsPage";
+import { PublicLessonPage } from "./pages/public/PublicLessonPage";
 
 function App() {
   return (
@@ -38,6 +42,7 @@ function App() {
                 <Route path="about" element={<AboutPage />} />
                 <Route path="services" element={<ServicesPage />} />
                 <Route path="learn" element={<LearnPage />} />
+                <Route path="learn/:lessonId" element={<PublicLessonPage />} />
                 <Route path="contact" element={<ContactPage />} />
                 <Route path="disclosures" element={<LegalPage titleKey="disclosures.title" sections={DISCLOSURE_SECTIONS} />} />
                 <Route path="privacy" element={<LegalPage titleKey="privacy.title" introKey="privacy.intro" sections={PRIVACY_SECTIONS} />} />
@@ -84,9 +89,9 @@ function App() {
                   </RequireAuth>
                 }
               >
-                <Route index element={<PlaceholderPage titleKey="portal.home.title" bodyKey="portal.home.body" />} />
-                <Route path="lessons/:lessonId" element={<PlaceholderPage titleKey="portal.lesson.title" />} />
-                <Route path="tools" element={<PlaceholderPage titleKey="portal.tools.title" />} />
+                <Route index element={<PortalHome />} />
+                <Route path="lessons/:lessonId" element={<PortalLessonPage />} />
+                <Route path="tools" element={<ToolsPage />} />
                 <Route path="account" element={<PortalAccount />} />
               </Route>
             </Routes>

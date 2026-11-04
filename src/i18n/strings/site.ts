@@ -91,14 +91,9 @@ export const site = {
   "learn.title": "Learn",
   "learn.lead":
     "Two sample lessons from our course. Create an account to follow the full course and track your progress.",
-  "learn.lesson1.title": "Budgeting and cash flow",
-  "learn.lesson1.body":
-    "How money moves in and out each month, why tracking it matters, and a simple way to build a budget you can keep.",
-  "learn.lesson2.title": "How compound growth works",
-  "learn.lesson2.body":
-    "How growth builds on itself over time, why time matters as much as the amount, and how to read a compound growth chart.",
-  "learn.sample": "Sample lesson",
-  "learn.comingSoon": "Full lesson coming soon",
+  "learn.sample": "Free sample",
+  "learn.read": "Read the sample lesson",
+  "learn.more": "The full course has {count} modules, each with a short quiz, plus four calculators.",
   "learn.cta": "Create an account",
 
   "page.notFound.title": "Page not found",

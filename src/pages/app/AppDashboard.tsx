@@ -10,6 +10,7 @@ import { transactionTotal } from "../../utils/format";
 import { zonedParts } from "../../lib/tradeMath";
 import { round } from "../../lib/instruments";
 import { ErrorText, Money, Page, Stat } from "../../components/app/AppUI";
+import { ClientProgressTable } from "../../components/app/ClientProgressTable";
 import { buttonSecondary } from "../../components/app/styles";
 
 interface MonthFigures {
@@ -92,6 +93,7 @@ export function AppDashboard() {
         {access.ledger && <Link to="/app/ledger" className={buttonSecondary}>{t("app.dashboard.openLedger")}</Link>}
         {access.journal && <Link to="/app/journal" className={buttonSecondary}>{t("app.dashboard.openJournal")}</Link>}
       </div>
+      {access.ownerTools && <ClientProgressTable />}
     </Page>
   );
 }

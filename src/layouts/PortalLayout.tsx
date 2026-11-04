@@ -3,6 +3,7 @@ import { useT } from "../i18n/LanguageContext";
 import { useAuth } from "../state/AuthContext";
 import { useProfile } from "../state/ProfileContext";
 import { BrandMark, Container } from "../components/site/SiteUI";
+import { DisclaimerGate } from "../components/portal/DisclaimerGate";
 
 const NAV = [
   { to: "/portal", key: "portal.nav.home", end: true },
@@ -49,7 +50,9 @@ export function PortalLayout() {
         </Container>
       </header>
       <main>
-        <Outlet />
+        <DisclaimerGate>
+          <Outlet />
+        </DisclaimerGate>
       </main>
     </div>
   );
