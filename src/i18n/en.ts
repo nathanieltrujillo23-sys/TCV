@@ -6,6 +6,7 @@ import { contact } from "./strings/contact";
 import { legal } from "./strings/legal";
 import { auth } from "./strings/auth";
 import { account } from "./strings/account";
+import { journal } from "./strings/journal";
 
 /** English is the source of truth: its keys define every string the app can translate. */
 export const en = {
@@ -17,6 +18,7 @@ export const en = {
   ...legal,
   ...auth,
   ...account,
+  ...journal,
 };
 
 export type StringKey = keyof typeof en;

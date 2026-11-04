@@ -17,6 +17,11 @@ import { ContactPage } from "./pages/public/ContactPage";
 import { LegalPage } from "./pages/public/LegalPage";
 import { DISCLOSURE_SECTIONS, PRIVACY_SECTIONS, TERMS_SECTIONS } from "./pages/public/legalSections";
 import { MessagesPage } from "./pages/app/MessagesPage";
+import { JournalPage } from "./pages/app/JournalPage";
+import { TradeFormPage } from "./pages/app/TradeFormPage";
+import { JournalStatsPage } from "./pages/app/JournalStatsPage";
+import { JournalRulesPage } from "./pages/app/JournalRulesPage";
+import { AccountsPage } from "./pages/app/AccountsPage";
 import { AppDashboard } from "./pages/app/AppDashboard";
 import { LedgerPage } from "./pages/app/LedgerPage";
 import { PortalAccount } from "./pages/portal/PortalAccount";
@@ -53,12 +58,13 @@ function App() {
               >
                 <Route index element={<AppDashboard />} />
                 <Route path="ledger" element={<RequireAccess need="ledger"><LedgerPage /></RequireAccess>} />
-                <Route path="journal" element={<RequireAccess need="journal"><PlaceholderPage titleKey="app.journal.title" /></RequireAccess>} />
-                <Route path="journal/new" element={<RequireAccess need="journal"><PlaceholderPage titleKey="app.journal.new.title" /></RequireAccess>} />
+                <Route path="journal" element={<RequireAccess need="journal"><JournalPage /></RequireAccess>} />
+                <Route path="journal/new" element={<RequireAccess need="journal"><TradeFormPage /></RequireAccess>} />
+                <Route path="journal/rules" element={<RequireAccess need="journal"><JournalRulesPage /></RequireAccess>} />
                 <Route path="journal/import" element={<RequireAccess need="journal"><PlaceholderPage titleKey="app.journal.import.title" /></RequireAccess>} />
-                <Route path="journal/stats" element={<RequireAccess need="journal"><PlaceholderPage titleKey="app.journal.stats.title" /></RequireAccess>} />
-                <Route path="journal/:tradeId" element={<RequireAccess need="journal"><PlaceholderPage titleKey="app.journal.trade.title" /></RequireAccess>} />
-                <Route path="accounts" element={<RequireAccess need="journal"><PlaceholderPage titleKey="app.accounts.title" /></RequireAccess>} />
+                <Route path="journal/stats" element={<RequireAccess need="journal"><JournalStatsPage /></RequireAccess>} />
+                <Route path="journal/:tradeId" element={<RequireAccess need="journal"><TradeFormPage /></RequireAccess>} />
+                <Route path="accounts" element={<RequireAccess need="journal"><AccountsPage /></RequireAccess>} />
                 <Route path="portfolio" element={<RequireAccess need="staffTools"><PlaceholderPage titleKey="app.portfolio.title" /></RequireAccess>} />
                 <Route
                   path="messages"
